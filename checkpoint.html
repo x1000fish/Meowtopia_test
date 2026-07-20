@@ -155,16 +155,28 @@
       display: flex;
       animation: fadeIn 0.3s ease-out;
     }
+    /* 彈跳視窗內容樣式調整 */
     .reward-modal-content {
       background: #FFF7D7;
       border: 8px solid var(--dark);
       border-radius: 36px;
       padding: 36px;
       text-align: center;
-      width: min(420px, 100%);
+      width: min(480px, 100%); /* 稍微加寬視窗以容納單行標題 */
       box-shadow: 12px 12px 0 var(--gold);
       transform: scale(0.8);
       animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    
+    /* 確保標題強制在同一行並自動縮放 */
+    #reward-title {
+      font-size: 1.9rem !important;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--dark);
+      font-weight: 900;
+      margin-bottom: 10px;
     }
     @keyframes fadeIn {
       from { opacity: 0; }
@@ -198,10 +210,10 @@
     .concept-path { display: grid; gap: 12px; }
 
     .concept-chip {
-      display: flex;
+      display: grid;
+      grid-template-columns: 140px 1fr; /* 固定左側標題寬度為 140px，右側說明自動填滿，確保上下完全對齊 */
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
       border: 2px solid #E5E7EB;
       border-radius: 12px;
       padding: 14px 18px;
@@ -210,8 +222,8 @@
       transition: border-color 0.2s;
     }
     .concept-chip:hover { border-color: var(--blue); }
-    .concept-chip span { color: #6B7280; font-weight: bold; }
-    .concept-chip strong { color: var(--blue); font-weight: 900; font-size: 1.1rem; }
+    .concept-chip span { color: #6B7280; font-weight: bold; text-align: left; }
+    .concept-chip strong { color: var(--blue); font-weight: 900; font-size: 1.05rem; text-align: left; }
 
     .step-header {
       display: flex;
@@ -344,8 +356,8 @@
     }
 
     .checkpoint-fish {
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
       position: absolute;
       z-index: 30;
       pointer-events: none;
@@ -364,61 +376,107 @@
     .level1-board .checkpoint-line { height: 8px; top: 50%; left: 140px; right: 140px; transform: translateY(-50%); }
     .level1-board .node-left { top: 50%; left: 30px; transform: translateY(-50%); }
     .level1-board .node-right { top: 50%; right: 30px; transform: translateY(-50%); }
-    .level1-board .slot-left { top: 50%; left: 100px; }
-    .level1-board .slot-right { top: 50%; left: calc(100% - 100px); }
+    .level1-board .slot-left { top: 58%; left: 95px; }
+    .level1-board .slot-right { top: 58%; left: calc(100% - 105px); }
+   
+    /* 調整 Checkpoint 2 的外層容器間距，使其與 Checkpoint 1 的題目與框框距離完全一致 */
     .cp2-lab {
-      display: grid;
-      grid-template-columns: 140px 1fr;
-      gap: 16px;
-      align-items: stretch;
-      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 0px; /* 統一與上方問題文字的距離 */
+      margin-bottom: 0px;
     }
-    .path-controls {
+    
+    /* 將按鈕容器的位置整體往上移 */
+   .cp2-board.cp2-board-custom .path-controls {
+      position: absolute;
+      bottom: 20px; /* 貼近底部，減少空白 */
+      left: 24px;
+      right: 24px;
       display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      align-content: start;
+      z-index: 40;
     }
-    .path-btn {
-      min-height: 58px;
+    .path-btn, .multi-toggle-btn {
+      min-height: 40px !important;
+      height: 40px;
+      padding: 0 4px;
+      font-size: 0.8rem !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      white-space: nowrap;
       border: 3px solid var(--dark);
-      border-radius: 14px;
-      background: white;
-      color: var(--dark);
-      font-size: 0.95rem;
+      border-radius: 10px;
       font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 4px 0 var(--dark);
-      transition: all 0.15s ease;
+      box-shadow: 0 3px 0 var(--dark);
+      transition: all 0.1s ease;
+    }
+
+    .path-btn {
+      background: white;
+      color: var(--dark);
     }
     .path-btn:hover {
       transform: translateY(-2px);
       background: #F0F9FF;
-      box-shadow: 0 6px 0 var(--dark);
+      box-shadow: 0 5px 0 var(--dark);
     }
-    .multi-toggle-btn {
-      min-height: 58px;
-      min-width: 118px;
-      border: 4px solid var(--dark);
-      border-radius: 20px;
-      padding: 6px 14px;
-      color: white;
-      font-size: 1rem;
-      font-weight: 900;
-      cursor: pointer;
-      box-shadow: 0 4px 0 var(--dark);
-      text-shadow: 2px 2px 0 var(--dark);
-      transition: all 0.1s ease;
-    }
-    .multi-toggle-btn.mode-4 { background: #b583e5; }
-    .multi-toggle-btn.mode-8 { background: #46c89d; }
+
+    .multi-toggle-btn.mode-4 { background: #b583e5; color: white; text-shadow: 1px 1px 0 var(--dark); }
+    .multi-toggle-btn.mode-8 { background: #46c89d; color: white; text-shadow: 1px 1px 0 var(--dark); }
     .multi-toggle-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 0 var(--dark);
+      box-shadow: 0 5px 0 var(--dark);
     }
     .cp2-board {
       min-height: 320px;
       margin-bottom: 0;
     }
+    
+    
+    /* Checkpoint 2 專屬：拉寬正方形尺寸，並將上方節點位置整體往上移以預留下方按鈕空間 */
+  /* 保持外框大小維持不變 */
+    .cp2-board.cp2-board-custom {
+      min-height: 400px !important;
+      width: 480px !important;
+      max-width: 100%;
+      margin: 0 auto 24px auto;
+      position: relative;
+    }
+    
+    /* 獨立放大 Checkpoint 2 的 Node 尺寸（不影響其他 Checkpoint） */
+    .cp2-board.cp2-board-custom .checkpoint-node {
+      width: 110px !important;
+      height: 110px !important;
+    }
+    .cp2-board.cp2-board-custom .checkpoint-node img {
+      width: 82px !important;
+    }
+
+    /* 調整內部節點拉開距離（位置擴大到外框邊緣） */
+    .cp2-board.cp2-board-custom .cp2-node-0 { top: 25px !important; left: 60px !important; }
+    .cp2-board.cp2-board-custom .cp2-node-1 { top: 25px !important; right: 60px !important; left: auto !important; }
+    .cp2-board.cp2-board-custom .cp2-node-2 { bottom: 75px !important; left: 60px !important; top: auto !important; }
+    .cp2-board.cp2-board-custom .cp2-node-3 { bottom: 75px !important; right: 60px !important; left: auto !important; top: auto !important; }
+
+    /* 調整魚的位置跟著節點距離擴開 */
+    .cp2-board.cp2-board-custom .cp2-slot-0 { top: 95px !important; left: 115px !important; }
+    .cp2-board.cp2-board-custom .cp2-slot-1 { top: 95px !important; left: calc(100% - 115px) !important; }
+    .cp2-board.cp2-board-custom .cp2-slot-2 { top: calc(100% - 115px) !important; left: 115px !important; }
+    .cp2-board.cp2-board-custom .cp2-slot-3 { top: calc(100% - 115px) !important; left: calc(100% - 115px) !important; }
+
+    /* 調整內部連線長度以對齊拉開後的節點 */
+    .cp2-board.cp2-board-custom #cp2-line-h-0 { top: 78px !important; left: 145px !important; right: 145px !important; width: auto !important; }
+    .cp2-board.cp2-board-custom #cp2-line-h-1 { bottom: 118px !important; left: 145px !important; right: 145px !important; width: auto !important; top: auto !important; }
+    
+    .cp2-board.cp2-board-custom #cp2-line-v-0 { left: 108px !important; top: 85px !important; bottom: 175px !important; height: auto !important; }
+    .cp2-board.cp2-board-custom #cp2-line-v-1 { right: 108px !important; left: auto !important; top: 85px !important; bottom: 175px !important; height: auto !important; }
+
     .cp2-board .checkpoint-node {
       width: 96px;
       height: 96px;
@@ -430,8 +488,8 @@
     }
     .cp2-board .fixed-number {
       position: absolute;
-      bottom: -5px;
-      right: 31px;
+      bottom: 0px;
+      right: 40px; /* 數值從原本的 31px 調大，標籤就會往左移 */
       font-size: 16px;
       font-weight: 900;
       color: var(--dark);
@@ -556,6 +614,7 @@
     .cp3-mini-node.far-copy img {
       filter: grayscale(1) saturate(0.35) brightness(0.98);
     }
+
     .line-question-row {
       display: grid;
       grid-template-columns: 150px 1fr;
@@ -953,6 +1012,30 @@
       .line-question-row { grid-template-columns: 1fr; }
       .actions { flex-direction: column; }
     }
+    /* 讓 NEXT 按鈕長得跟選項（.answer-btn）一樣，但寬度撐滿 */
+    .step-next-btn {
+      width: 100%;
+      min-height: 64px;
+      border: 3px solid #E5E7EB;
+      border-radius: 12px;
+      background: white;
+      color: var(--blue);
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+    }
+    .step-next-btn:hover {
+      border-color: var(--blue);
+      background: #F0F9FF;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(91, 164, 207, 0.15);
+    }
   </style>
 </head>
 <body>
@@ -980,23 +1063,29 @@
           </section>
         </div>
         
-        <!-- 獎勵彈跳視窗 -->
+      <!-- 獎勵彈跳視窗 -->
       <div id="reward-modal" class="reward-modal-overlay">
         <div class="reward-modal-content">
           <div class="reward-star">★</div>
-          <h2 id="reward-title" style="font-size: 2.2rem; color: var(--dark); font-weight: 900; margin-bottom: 10px;"></h2>
+           <h2 id="reward-title"></h2>
           <p id="reward-copy" style="font-size: 1.1rem; margin: 0 0 24px; color: #4B5563; font-weight: bold;"></p>
-          <div class="flex justify-center items-center gap-3">
-            <button onclick="location.href='index.html'" class="game-btn btn-blue" style="font-size: 18px; padding: 10px 20px;">HOME</button>
-            <button onclick="location.reload()" class="game-btn btn-green" style="width: 58px; height: 58px; min-width: 58px; border-radius: 50%; padding: 0; display: inline-flex; align-items: center; justify-content: center; margin: 0; box-sizing: border-box;" aria-label="Play again" title="Play again">
-                <svg viewBox="0 0 24 24" aria-hidden="true" fill="#fff" style="width: 28px; height: 28px; filter: drop-shadow(2px 2px 0 #463438);">
-                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4C7.58 4 4 7.58 4 12s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-3.06c-.77 1.76-2.54 3-4.67 3c-2.76 0-5-2.24-5-5s2.24-5 5-5c1.38 0 2.63.56 3.54 1.46L12 12h8V4z" />
-                </svg>
-            </button>
-            <button id="reward-next" class="game-btn btn-green" style="font-size: 18px; padding: 10px 20px;">CONTINUE</button>
+      
+      <!-- 排版對齊 Level 1 的按鈕結構 -->
+          
+          <div style="display: flex; flex-direction: column; gap: 14px; align-items: center; justify-content: center; width: 100%;">
+            <button onclick="location.href='index.html'" class="game-btn btn-blue" style="width: 100%; border-radius: 60px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; font-size: 22px; padding: 12px;">HOME</button>
+        
+            <div style="display: flex; gap: 14px; align-items: center; justify-content: center; width: 100%;">
+              <button onclick="location.reload()" class="game-btn btn-green" style="width: 78px; height: 78px; min-width: 78px; border-radius: 50%; padding: 0; display: inline-flex; align-items: center; justify-content: center; margin: 0; box-sizing: border-box;" aria-label="Play again" title="Play again">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="#fff" style="width: 38px; height: 38px; filter: drop-shadow(2px 2px 0 #463438);">
+                      <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4C7.58 4 4 7.58 4 12s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-3.06c-.77 1.76-2.54 3-4.67 3c-2.76 0-5-2.24-5-5s2.24-5 5-5c1.38 0 2.63.56 3.54 1.46L12 12h8V4z" />
+                  </svg>
+              </button>
+              <button id="reward-next" class="game-btn btn-green" style="flex-grow: 1; white-space: nowrap; font-size: 22px; padding: 12px 24px;">KEEP GOING</button>
+            </div>
           </div>
-        </div>
-      </div>
+         </div>
+       </div>
         <div class="actions">
          <button onclick="location.href='index.html'" class="game-btn btn-blue">HOME</button>
           <button id="complete-btn" class="game-btn btn-green" disabled>CLAIM STAR</button>
@@ -1023,42 +1112,42 @@
   <script>
     const CHECKPOINT_SCRIPT_URL = '';
     const SKIN_STORAGE_KEY = 'meowtopiaSkin';
-    const STAR_KEYS = ['cp1', 'cp2', 'cp3', 'cp4'];
+    const STAR_KEYS = ['cp1', 'cp2', 'cp3'];
     const STAR_NAMES = {
       cp1: 'State Explorer Star',
-      cp2: 'Hypercube Explorer Star',
-      cp3: 'Dimension Explorer Star',
-      cp4: 'Quantum Optimization Star'
+      cp2: 'Geometry Explorer Star',
+      cp3: 'World Explorer Star',
+      cp4: 'Quantum Explorer Certificate'
     };
     
     const CHECKPOINTS = {
       cp1: {
         title: 'Checkpoint 1', star: STAR_NAMES.cp1, next: 'level2.html',
         introTitle: 'State Explorer',
-        intro: 'Great work finishing the first level. These questions help you name the pattern you discovered while clicking edges, swapping fish, and matching each fish to its cat.',
-        concepts: [['Cat Node', 'State'], ['Edge', 'Transformation'], ['Double Tap', 'Revert State']],
-        stepsCount: 2
+        intro: '🎉 Great job!\nYou solved your first puzzle.\nNow let\'s slow down for a moment and think about what you discovered.\nThese questions are here to help you discover the hidden rules of this world.',
+        concepts: [['Cat Node', 'Target state'], ['Fish', 'Current state'], ['Edge', 'Possible move']],
+        stepsCount: 3
       },
       cp2: {
         title: 'Checkpoint 2', star: STAR_NAMES.cp2, next: 'level5.html',
-        introTitle: 'Hypercube Explorer',
-        intro: 'In the two-feature world, each edge direction changes one visible feature.',
-        concepts: [['Dimension', 'Feature'], ['Edge Direction', 'Feature Change'], ['Big Move', 'Shorter Path']],
+        introTitle: 'Geometry Explorer',
+        intro: '🎉 Great job!\nYou completed the 2-feature puzzles.\nNow let\'s slow down and look at how this puzzle is organized.The cats are not placed randomly.Each connection follows a hidden pattern.These questions will help you discover how different directions represent different feature changes.',
+        concepts: [['State', 'A combination of features'], ['Direction', 'A path where the same feature changes'], ['Feature Mapping', 'Different directions represent different feature changes'], ['Advanced Move', 'Applying the same move to multiple states at once']],
         stepsCount: 3
       },
       cp3: {
-        title: 'Checkpoint 3', star: STAR_NAMES.cp3, next: 'level11.html',
-        introTitle: 'Dimension Explorer',
-        intro: 'As features increase, the world doesn\'t restart. It duplicates the original world and links the two together with the new feature.',
-        concepts: [['2 features', '4 states'], ['3 features', '8 states'], ['4 features', '16 states'], ['New feature', 'New direction']],
-        stepsCount: 3
+        title: 'Checkpoint 3', star: STAR_NAMES.cp3, next: 'level18.html', // 導向通關 Level 18 解鎖 CP4
+        introTitle: 'World Explorer',
+        intro: '🎉 Great job!\nYou explored the 4-feature puzzles.\nNow let\'s slow down and think about how this world grows.\nAs more features are added, the puzzle becomes larger, but the same rules still work.\nThere are also many ways to solve the same puzzle.\nThese questions will help you discover how larger worlds are built and how to find better solutions.',
+        concepts: [['New Feature', 'A feature that creates more possible states'], ['Larger World', 'A world created by adding more features'], ['Efficient Solution', 'Reaching the same target using fewer moves'], ['Optimization', 'Finding a better solution to the same puzzle']],
+        stepsCount: 4
       },
       cp4: {
-        title: 'Checkpoint 4', star: STAR_NAMES.cp4, next: 'checkpoint.html?certificate=1',
-        introTitle: 'Quantum Optimization',
-        intro: 'In the end, you weren\'t just moving a fish. You were arranging the order of reversible operations. Shorter, fewer, and lower cost: these are the real goals of quantum reversible circuit synthesis.',
-        concepts: [['Cat Node', 'State'], ['Edge', 'Reversible Gate'], ['Path', 'Circuit Order'], ['Optimization', 'Cost Reduction']],
-        stepsCount: 3
+        title: 'Final Challenge', star: STAR_NAMES.cp4, next: 'checkpoint.html?certificate=1',
+        introTitle: 'Quantum Explorer Certificate',
+        intro: '🎉 Congratulations!\nYou have completed the Quantum Explorer journey.\nThis final challenge reviews what you discovered about:\n- states and features\n- state transformations\n- reversible operations\n- expanding puzzle worlds\n- efficient solutions\nScore 85% or higher to earn your Quantum Explorer Certificate.',
+        concepts: [['Part 1', 'Quantum Concept Assessment (10 questions)'], ['Part 2', 'Player Reflection (4 questions)'], ['Passing Score', '85% or higher to earn certificate']],
+        stepsCount: 14
       }
     };
 
@@ -1181,7 +1270,12 @@
         state.currentStep++;
         updateStepUI();
         
-        // 點擊 NEXT 後自動平滑往上滑動到題目區或頂部
+        // 切換到下一題時，自動重置該題互動盤的魚與節點位置
+        if (state.checkpointId === 'cp1' && cp1StepStates[state.currentStep]) {
+          cp1StepStates[state.currentStep] = { fishAtNode: [0, 1], toggleClicks: 0 };
+          updateCP1StepDemoUI(state.currentStep);
+        }
+        
         setTimeout(() => {
           const questionArea = document.getElementById('question-area') || document.getElementById('checkpoint-shell');
           if (questionArea) {
@@ -1236,34 +1330,50 @@
       if (!btn) return;
       const missing = missingRequired();
       const wrong = unresolvedMistakes();
+      
       if (missing.length === 0) {
         btn.disabled = false;
-        btn.innerText = wrong.length ? 'RETRY MISSED' : 'CLAIM STAR';
+        if (wrong.length > 0) {
+          btn.innerText = 'RETRY MISSED';
+          btn.onclick = startMistakeRetry; // 支援多輪循環答錯再複習
+        } else {
+          btn.innerText = 'CLAIM STAR';
+          btn.onclick = completeCheckpoint;
+        }
         btn.style.animation = 'starPop 0.5s ease forwards';
       } else {
         btn.disabled = true;
         btn.innerText = 'CLAIM STAR';
+        btn.onclick = completeCheckpoint;
       }
     }
 
     function showQuestionFeedback(questionId, value) {
       const expected = expectedAnswers(state.checkpointId) || {};
-      if (!Object.prototype.hasOwnProperty.call(expected, questionId)) return;
-      const feedback = document.querySelector(`[data-feedback="${questionId}"]`);
-      const isCorrect = String(value) === String(expected[questionId]);
+      
+      // 針對 CP4 後半段不計分的問卷題型（ref1, ref2, ref3），直接視為正確並允許進入下一步
+      const isReflection = ['cp4_ref1', 'cp4_ref2', 'cp4_ref3'].includes(questionId);
+      const isCorrect = isReflection || String(value) === String(expected[questionId]);
+
       if (isCorrect) {
         delete state.mistakes[questionId];
       } else {
         state.mistakes[questionId] = true;
       }
-      if (!feedback) return;
-      const meta = QUESTION_META[questionId] || {};
-      feedback.className = `feedback show ${isCorrect ? 'correct' : 'wrong'}`;
+      
+      const feedback = document.querySelector(`[data-feedback="${questionId}"]`);
+      if (feedback && !isReflection) {
+        const meta = QUESTION_META[questionId] || {};
+        feedback.className = `feedback show ${isCorrect ? 'correct' : 'wrong'}`;
+        if (isCorrect) {
+          feedback.innerHTML = `Correct.<br>${meta.explanation || ''}`;
+        } else {
+          const wrongText = meta.wrong || `Review this question carefully.`;
+          feedback.innerHTML = `${wrongText}`;
+        }
+      }
 
-      feedback.innerHTML = isCorrect
-        ? `Correct. ${meta.explanation || ''}`
-        : `Review this later: the correct answer is "${meta.label || expected[questionId]}." ${meta.explanation || ''}`;
-
+      // 只要該步驟完成（包含問卷題型），就會自動在右下角產生 NEXT 按鈕
       if (isStepAnswered(state.currentStep) && state.currentStep < state.totalSteps) {
         const activeBlock = document.querySelector(`.question-block[data-step="${state.currentStep}"]`);
         if (activeBlock) {
@@ -1276,11 +1386,10 @@
             nextContainer.style.marginTop = '24px';
             activeBlock.appendChild(nextContainer);
           }
-          nextContainer.innerHTML = `<button onclick="nextStep()" class="game-btn btn-blue" style="font-size: 18px; padding: 8px 28px; border-width: 4px;">NEXT ➜</button>`;
+          nextContainer.innerHTML = `<button onclick="nextStep()" class="step-next-btn">NEXT ➜</button>`;
         }
       }
 
-      // 讓畫面平滑滾動到詳解與按鈕的位置，避免被邊框擋住
       setTimeout(() => {
         const actionsArea = document.querySelector('.actions') || document.getElementById('complete-btn');
         if (actionsArea) {
@@ -1290,7 +1399,6 @@
         }
       }, 100);
     }
-
     function feedbackSlot(questionId) {
       return `<div class="feedback" data-feedback="${questionId}"></div>`;
     }
@@ -1331,13 +1439,25 @@
     function startMistakeRetry() {
       const wrong = unresolvedMistakes();
       if (!wrong.length) return;
-      const first = wrong[0];
-      clearAnswerForRetry(first);
-      state.currentStep = QUESTION_STEPS[first] || 1;
-      updateStepUI();
-      document.getElementById('status-line').innerText = 'Retry mode: answer the missed question again.';
+      
+      // 只要按一次 RETRY MISSED，把所有答錯的題目與對應的互動盤節點全部一次重置
+      wrong.forEach(questionId => {
+        clearAnswerForRetry(questionId);
+        const step = QUESTION_STEPS[questionId];
+        if (step && state.checkpointId === 'cp1' && cp1StepStates[step]) {
+          cp1StepStates[step] = { fishAtNode: [0, 1], toggleClicks: 0 };
+          updateCP1StepDemoUI(step);
+        }
+      });
 
-      // 點擊 RETRY MISSED 後自動平滑往上滑動到題目區
+      // 自動跳轉到第一道錯題所在的步驟
+      const first = wrong[0];
+      const targetStep = QUESTION_STEPS[first] || 1;
+      state.currentStep = targetStep;
+
+      updateStepUI();
+      document.getElementById('status-line').innerText = 'Retry mode: answer the missed questions again.';
+      
       setTimeout(() => {
         const questionArea = document.getElementById('question-area') || document.getElementById('checkpoint-shell');
         if (questionArea) {
@@ -1372,77 +1492,94 @@
       `).join('');
       state.totalSteps = cp.stepsCount;
     }
-    function level1Board(interactive = false) {
-      const correctClass = interactive ? 'node-correct' : 'node-correct';
-      const click = interactive ? ' onclick="toggleCP1Demo()"' : '';
-      const title = interactive ? ' title="Click twice"' : '';
+    // 讓 Checkpoint 1 的每一題各自獨立儲存魚與節點的位置
+    let cp1StepStates = {
+      1: { fishAtNode: [0, 1], toggleClicks: 0 },
+      2: { fishAtNode: [0, 1], toggleClicks: 0 },
+      3: { fishAtNode: [0, 1], toggleClicks: 0 }
+    };
+
+    function level1BoardForStep(step) {
       return `
-        <div class="checkpoint-board level1-board">
-          <div class="checkpoint-line"${click}${title}></div>
-          <div data-cp1-node="0" class="checkpoint-node node-left ${correctClass}"><img src="${defaultCatSrc(0, 1)}" alt="left cat"></div>
-          <div data-cp1-node="1" class="checkpoint-node node-right ${correctClass}"><img src="${defaultCatSrc(1, 1)}" alt="right cat"></div>
+        <div class="checkpoint-board level1-board" id="cp1-board-${step}">
+          <div class="checkpoint-line" onclick="toggleCP1StepDemo(${step})" title="Click twice"></div>
+          <div data-cp1-node="0" class="checkpoint-node node-left node-correct"><img src="${defaultCatSrc(0, 1)}" alt="left cat"></div>
+          <div data-cp1-node="1" class="checkpoint-node node-right node-correct"><img src="${defaultCatSrc(1, 1)}" alt="right cat"></div>
           <div data-cp1-fish="0" class="checkpoint-fish slot-left"><img src="${defaultFishSrc(0, 1)}" alt="left fish"></div>
           <div data-cp1-fish="1" class="checkpoint-fish slot-right"><img src="${defaultFishSrc(1, 1)}" alt="right fish"></div>
         </div>
       `;
     }
 
-    function toggleCP1Demo() {
-      state.toggleClicks += 1;
-      state.cp1FishAtNode = state.cp1FishAtNode.map(node => node === 0 ? 1 : 0);
-      updateCP1DemoUI();
-      if (state.toggleClicks >= 2 && state.cp1FishAtNode[0] === 0 && state.cp1FishAtNode[1] === 1) {
-        document.getElementById('status-line').innerText = 'Clicking the same edge twice returns the fish to their original places.';
+    function toggleCP1StepDemo(step) {
+      playPop();
+      if (!cp1StepStates[step]) {
+        cp1StepStates[step] = { fishAtNode: [0, 1], toggleClicks: 0 };
       }
+      cp1StepStates[step].toggleClicks += 1;
+      cp1StepStates[step].fishAtNode = cp1StepStates[step].fishAtNode.map(node => node === 0 ? 1 : 0);
+      updateCP1StepDemoUI(step);
     }
 
-    function updateCP1DemoUI() {
+    function updateCP1StepDemoUI(step) {
+      const board = document.getElementById(`cp1-board-${step}`);
+      if (!board) return;
+      const stateArr = cp1StepStates[step]?.fishAtNode || [0, 1];
+
       [0, 1].forEach(fish => {
-        document.querySelectorAll(`[data-cp1-fish="${fish}"]`).forEach(el => {
-          el.classList.toggle('slot-left', state.cp1FishAtNode[fish] === 0);
-          el.classList.toggle('slot-right', state.cp1FishAtNode[fish] === 1);
+        board.querySelectorAll(`[data-cp1-fish="${fish}"]`).forEach(el => {
+          el.classList.toggle('slot-left', stateArr[fish] === 0);
+          el.classList.toggle('slot-right', stateArr[fish] === 1);
         });
       });
       [0, 1].forEach(node => {
-        document.querySelectorAll(`[data-cp1-node="${node}"]`).forEach(el => {
-          el.classList.toggle('node-correct', state.cp1FishAtNode[node] === node);
+        board.querySelectorAll(`[data-cp1-node="${node}"]`).forEach(el => {
+          el.classList.toggle('node-correct', stateArr[node] === node);
         });
       });
     }
 
     function renderCP1() {
-      state.cp1FishAtNode = [0, 1];
-      state.toggleClicks = 0;
+      cp1StepStates = {
+        1: { fishAtNode: [0, 1], toggleClicks: 0 },
+        2: { fishAtNode: [0, 1], toggleClicks: 0 },
+        3: { fishAtNode: [0, 1], toggleClicks: 0 }
+      };
+
       document.getElementById('question-area').innerHTML = `
-        ${renderStepHeader(2)}
+        ${renderStepHeader(3)}
         <div class="question-block active" data-step="1">
-          ${level1Board(true)}
-          <h3>1. Look at the left pair and the right pair. How many visible features are different?</h3>
+          ${level1BoardForStep(1)}
+          <h3>1. Observe two connected cats.<br>How many features are different between these two cats?</h3>
           ${optionButtons('cp1_q1', [{label:'0', value:'0'}, {label:'1', value:'1'}, {label:'2', value:'2'}, {label:'3', value:'3'}])}
         </div>
         <div class="question-block" data-step="2">
-          ${level1Board(true)}
-          <h3>2. Try clicking the same edge twice. What happens to the fish?</h3>
+          ${level1BoardForStep(2)}
+          <h3>2. Click the same edge twice. What happens to the fish?</h3>
           ${optionButtons('cp1_q2', [
-            {label:'Returns to original position', value:'back'},
-            {label:'Keeps moving forward', value:'move'},
-            {label:'Disappears entirely', value:'gone'}
+            {label:'The fish returns to its original position.', value:'back'},
+            {label:'The fish keeps moving forward.', value:'move'},
+            {label:'The fish disappears.', value:'gone'}
+          ])}
+        </div>
+        <div class="question-block" data-step="3">
+          ${level1BoardForStep(3)}
+          <h3>3. What does the line between two cats represent?</h3>
+          ${optionButtons('cp1_q3', [
+            {label:'A. The distance between two cats.', value:'dist'},
+            {label:'B. A possible move that changes one state into another.', value:'move_state'},
+            {label:'C. A decoration that makes the game look nicer.', value:'decor'}
           ])}
         </div>
       `;
-      updateCP1DemoUI();
+      [1, 2, 3].forEach(step => updateCP1StepDemoUI(step));
       updateStepUI();
     }
 
-    function cp2Board() {
+   function cp2Board() {
       return `
         <div class="cp2-lab">
-          <div class="path-controls">
-            <button class="multi-toggle-btn mode-4" onclick="applyCP2Move('horizontal')" onmouseover="highlightCP2Lines('horizontal', true)" onmouseout="highlightCP2Lines('horizontal', false)">Square Mode H</button>
-            <button class="multi-toggle-btn mode-4" onclick="applyCP2Move('vertical')" onmouseover="highlightCP2Lines('vertical', true)" onmouseout="highlightCP2Lines('vertical', false)">Square Mode V</button>
-            <button class="path-btn" onclick="resetCP2Demo()">Reset</button>
-          </div>
-          <div class="checkpoint-board cp2-board">
+          <div class="checkpoint-board cp2-board cp2-board-custom">
             <div id="cp2-line-h-0" class="checkpoint-line cp2-line-h"></div>
             <div id="cp2-line-h-1" class="checkpoint-line cp2-line-h"></div>
             <div id="cp2-line-v-0" class="checkpoint-line cp2-line-v"></div>
@@ -1458,6 +1595,11 @@
                 <img src="${defaultFishSrc(index, 2)}" alt="${codeFor(index, 2).slice(-2)} fish">
               </div>
             `).join('')}
+            <div class="path-controls">
+              <button class="multi-toggle-btn mode-4" onclick="applyCP2Move('horizontal')" onmouseover="highlightCP2Lines('horizontal', true)" onmouseout="highlightCP2Lines('horizontal', false)">Mode horizontal</button>
+              <button class="multi-toggle-btn mode-4" onclick="applyCP2Move('vertical')" onmouseover="highlightCP2Lines('vertical', true)" onmouseout="highlightCP2Lines('vertical', false)">Mode vertical</button>
+              <button class="path-btn" onclick="resetCP2Demo()">Reset</button>
+            </div>
           </div>
         </div>
       `;
@@ -1507,23 +1649,29 @@
         ${renderStepHeader(3)}
         ${cp2Board()}
         <div class="question-block active" data-step="1">
-          <h3>1. Which feature card changes along the horizontal edges? Try Square Mode H first.</h3>
-          ${featureButtons('cp2_horizontal', 2)}
+          <h3>1. Look at the horizontal connections.<br>Which feature changes between the cats connected by these lines?</h3>
+          ${optionButtons('cp2_horizontal', [
+            {label:'<img src="./svg/dif3.png" alt="Feature 1" style="width:45px; display:inline-block; vertical-align:middle;" /> ', value:'0'},
+            {label:'<img src="./svg/dif2.png" alt="Feature 2" style="width:45px; display:inline-block; vertical-align:middle;" /> ', value:'1'},
+            {label:'<img src="./svg/dif3.png" alt="Feature 1" style="width:32px; display:inline-block; vertical-align:middle; margin:0 2px;" /> <span>  &  <span> <img src="./svg/dif2.png" alt="Feature 2" style="width:32px; display:inline-block; vertical-align:middle; margin:0 2px;" /> ', value:'2'},
+            {label:'No feature changes', value:'3'}
+          ])}
         </div>
         <div class="question-block" data-step="2">
-          <h3>2. Which feature card changes along the vertical edges? Try Square Mode V and watch the fish swap.</h3>
-          ${featureButtons('cp2_vertical', 2)}
+          <h3>2. Look at the vertical connections.<br>Which feature changes between the cats connected by these lines?</h3>
+          ${optionButtons('cp2_vertical', [
+            {label:'<img src="./svg/dif3.png" alt="Feature 1" style="width:45px; display:inline-block; vertical-align:middle;" /> ', value:'0'},
+            {label:'<img src="./svg/dif2.png" alt="Feature 2" style="width:45px; display:inline-block; vertical-align:middle;" /> ', value:'1'},
+            {label:'<img src="./svg/dif3.png" alt="Feature 1" style="width:32px; display:inline-block; vertical-align:middle; margin:0 2px;" /> <span>  &  <span> <img src="./svg/dif2.png" alt="Feature 2" style="width:32px; display:inline-block; vertical-align:middle; margin:0 2px;" /> ', value:'2'},
+            {label:'No feature changes', value:'3'}
+          ])}
         </div>
         <div class="question-block" data-step="3">
-          <h3>3. Why is a "Big Move" faster?</h3>
-          <div class="step-comparison">
-            <div class="step-box">Normal path<strong>8</strong>steps</div>
-            <div class="step-box">Special move<strong>3</strong>steps</div>
-          </div>
+          <h3>3. Why can an Advanced Move solve the puzzle with fewer moves?</h3>
           ${optionButtons('cp2_q2', [
-            {label:'It changes more features at once', value:'more_features'},
-            {label:'It looks prettier on the board', value:'pretty'},
-            {label:'It is easier to click', value:'easy'}
+            {label:'It applies the same move to multiple connected states at the same time.', value:'0'},
+            {label:'It moves fish randomly closer to their targets.', value:'1'},
+            {label:'It changes the puzzle rules.', value:'2'}
           ])}
         </div>
       `;
@@ -1586,32 +1734,46 @@
 
     function renderCP3() {
       document.getElementById('question-area').innerHTML = `
-        ${renderStepHeader(3)}
-        ${cp3Board()}
+        ${renderStepHeader(4)}
+        
+        <!-- 將原本的 cp3Board() 換成放影片的容器 -->
+        <div class="visual-board cp3-board" style="display: flex; align-items: center; justify-content: center; background: #000; overflow: hidden;">
+          <video src="./svg/progress.mp4" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: contain;"></video>
+        </div>
+
         <div class="question-block active" data-step="1">
-          <h3>1. Match each edge style to the feature card it changes.</h3>
-          <div class="matching-grid">
-            ${lineFeatureQuestion('cp3_line_horizontal', 'Horizontal edges', 'horizontal')}
-            ${lineFeatureQuestion('cp3_line_vertical', 'Vertical edges', 'vertical')}
-            ${lineFeatureQuestion('cp3_line_diagonal', 'Diagonal edges', 'diagonal')}
-            ${lineFeatureQuestion('cp3_line_dashed', 'Dashed edges', 'dashed')}
-          </div>
+          <h3>1. When a new feature is added, how does the puzzle world grow?</h3>
+          ${optionButtons('cp3_q1', [
+            {label:'A. Build a completely new puzzle from the beginning.', value:'0'},
+            {label:'B. Copy the existing world and connect matching states using the new feature.', value:'1'},
+            {label:'C. Add random cats and connect them freely.', value:'2'}
+          ])}
         </div>
         <div class="question-block" data-step="2">
-          <h3>2. A new feature is added to the game world. How is a higher-dimensional world created from the existing one?</h3>
+          <h3>2. If the game has 5 features, and each feature has 2 possible choices, how many different states can exist?</h3>
           ${optionButtons('cp3_q2', [
-            {label:'A. Redesign all cats and states from scratch.', value:'redesign'},
-            {label:'B. Copy the original world and connect each state to its corresponding new state using the new feature.', value:'copy_add'},
-            {label:'C. Randomly add new cats without following existing patterns.', value:'random'}
+            {label:'A. 16', value:'0'},
+            {label:'B. 25', value:'1'},
+            {label:'C. 32', value:'2'},
+            {label:'D. 64', value:'3'}
           ])}
         </div>
         <div class="question-block" data-step="3">
-          <h3>3. If the game contains 5 different features, and each feature has two possible states, how many different cat and fish states will exist?</h3>
+          <h3>3. Two players solved the same puzzle. Player A used 8 moves. Player B used 4 moves. Why is Player B\'s solution better?</h3>
           ${optionButtons('cp3_q3', [
-            {label:'A. 16 states', value:'16'},
-            {label:'B. 25 states', value:'25'},
-            {label:'C. 32 states', value:'32'},
-            {label:'D. 64 states', value:'64'}
+            {label:'The fish reaches the target using fewer moves.', value:'0'},
+            {label:'The fish becomes bigger.', value:'1'},
+            {label:'More cats appear.', value:'2'},
+            {label:'The puzzle becomes easier.', value:'3'}
+          ])}
+        </div>
+        <div class="question-block" data-step="4">
+          <h3>4. Why do we look for more efficient solutions?</h3>
+          ${optionButtons('cp3_q4', [
+            {label:'A. To reach the same target using fewer moves.', value:'0'},
+            {label:'B. To create more cats.', value:'1'},
+            {label:'C. To change the puzzle rules.', value:'2'},
+            {label:'D. To make the fish move randomly.', value:'3'}
           ])}
         </div>
       `;
@@ -1620,74 +1782,179 @@
 
     function renderCP4() {
       document.getElementById('question-area').innerHTML = `
-        ${renderStepHeader(3)}
-        <div class="visual-board" style="padding: 24px; min-height: auto;">
-          <div class="step-comparison" style="margin: 0;">
-            <div class="step-box">Circuit order<strong>Path</strong>operations</div>
-            <div class="step-box">Optimization<strong>Less</strong>time, gates, cost</div>
-          </div>
-        </div>
+        ${renderStepHeader(14)}
         
+        <!-- 步驟 1 專屬的影片容器（對應 Question 1） -->
         <div class="question-block active" data-step="1">
-          <h3>1. The movement path completed by the player represents:</h3>
+          <div class="visual-board cp3-board" style="display: flex; align-items: center; justify-content: center; background: #000; overflow: hidden; margin-bottom: 20px;">
+            <video src="./svg/1to4.mp4" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: contain;"></video>
+          </div>
+          <h3>Question 1: State Understanding<br>What does each cat represent?</h3>
           ${optionButtons('cp4_q1', [
-            {label:'A simple fish movement log', value:'fish_log'},
-            {label:'State transition path', value:'state_path'},
-            {label:'Reversible circuit operation order', value:'circuit_order'}
+            {label:'A. A game picture', value:'0'},
+            {label:'B. A state with features', value:'1'},
+            {label:'C. A score number', value:'2'},
+            {label:'D. A random object', value:'3'}
           ])}
         </div>
+
         <div class="question-block" data-step="2">
-          <h3>2. Real quantum reversible circuit synthesis aims to find:</h3>
-          <div class="matching-grid">
-            <label class="match-row">Time:
-              <select id="cp4_blank_time" onchange="selectDropdownAnswer('cp4_blank_time', this.value);">
-                <option value="">Select...</option><option value="Short">Shorter</option><option value="More">More</option><option value="High">Higher</option>
-              </select>
-            </label>
-            ${feedbackSlot('cp4_blank_time')}
-            <label class="match-row">Gates:
-              <select id="cp4_blank_gates" onchange="selectDropdownAnswer('cp4_blank_gates', this.value);">
-                <option value="">Select...</option><option value="Few">Fewer</option><option value="Long">Longer</option><option value="Slow">Slower</option>
-              </select>
-            </label>
-            ${feedbackSlot('cp4_blank_gates')}
-            <label class="match-row">Cost:
-              <select id="cp4_blank_cost" onchange="selectDropdownAnswer('cp4_blank_cost', this.value);">
-                <option value="">Select...</option><option value="Low">Lower</option><option value="Messy">Messier</option><option value="Thick">Thicker</option>
-              </select>
-            </label>
-            ${feedbackSlot('cp4_blank_cost')}
-          </div>
+          <h3>Question 2: Connected States<br>How many features are different between two connected cats?</h3>
+          ${optionButtons('cp4_q2', [
+            {label:'A. Zero features', value:'0'},
+            {label:'B. One feature', value:'1'},
+            {label:'C. Two features', value:'2'},
+            {label:'D. Many features', value:'3'}
+          ])}
         </div>
         <div class="question-block" data-step="3">
-          <h3>3. Reflection</h3>
-          <p style="margin-bottom: 8px; font-weight: bold;">When you first started playing, what did you think you were doing?</p>
-          <textarea class="reflection-input" placeholder="Type your thoughts here..." oninput="state.answers.cp4_reflect_before=this.value; checkFinalCompletion();"></textarea>
-          
-          <p style="margin: 20px 0 8px; font-weight: bold;">By the end, what do you think you were actually doing?</p>
-          <textarea class="reflection-input" placeholder="Type your thoughts here..." oninput="state.answers.cp4_reflect_after=this.value; checkFinalCompletion();"></textarea>
+          <h3>Question 3: State Transformation<br>What does a connection between cats represent?</h3>
+          ${optionButtons('cp4_q3', [
+            {label:'A. A possible state change', value:'0'},
+            {label:'B. A visual decoration', value:'1'},
+            {label:'C. A score connection', value:'2'},
+            {label:'D. A random movement', value:'3'}
+          ])}
+        </div>
+        <div class="question-block" data-step="4">
+          <h3>Question 4: Reversible Operation<br>What happens when the same operation is used twice?</h3>
+          ${optionButtons('cp4_q4', [
+            {label:'A. It goes back again', value:'0'},
+            {label:'B. It disappears away', value:'1'},
+            {label:'C. It changes randomly', value:'2'},
+            {label:'D. It creates anew', value:'3'}
+          ])}
+        </div>
+        <div class="question-block" data-step="5">
+          <h3>Question 5: Expanding the Puzzle World<br>When a new feature is added, how does the world grow?</h3>
+          ${optionButtons('cp4_q5', [
+            {label:'A. It creates random states', value:'0'},
+            {label:'B. It connects new states', value:'1'},
+            {label:'C. It removes old states', value:'2'},
+            {label:'D. It changes all rules', value:'3'}
+          ])}
+        </div>
+        <div class="question-block" data-step="6">
+          <h3>Question 6: Higher-dimensional Structure<br>When more features are added, what remains unchanged?</h3>
+          ${optionButtons('cp4_q6', [
+            {label:'A. The basic rules', value:'0'},
+            {label:'B. The number of states', value:'1'},
+            {label:'C. The puzzle size', value:'2'},
+            {label:'D. The target location', value:'3'}
+          ])}
+        </div>
+        <div class="question-block" data-step="7">
+          <h3>Question 7: Advanced Move<br>Why can an Advanced Move help solve puzzles?</h3>
+          ${optionButtons('cp4_q7', [
+            {label:'A. It changes many states together', value:'0'},
+            {label:'B. It skips puzzle rules', value:'1'},
+            {label:'C. It moves without goals', value:'2'},
+            {label:'D. It creates new targets', value:'3'}
+          ])}
+        </div>
+        <div class="question-block" data-step="8">
+          <h3>Question 8: Circuit Mapping<br>What does a player\'s solution path represent?</h3>
+          ${optionButtons('cp4_q8', [
+            {label:'A. A sequence of operations', value:'0'},
+            {label:'B. A list of pictures', value:'1'},
+            {label:'C. A record of scores', value:'2'},
+            {label:'D. A random route', value:'3'}
+          ])}
+        </div>
+        <div class="question-block" data-step="9">
+          <h3>Question 9: Optimization<br>Two players solve the same puzzle. Player A uses 10 moves. Player B uses 5 moves. Which solution is more efficient?</h3>
+          ${optionButtons('cp4_q9', [
+            {label:'A. Player A', value:'0'},
+            {label:'B. Player B', value:'1'},
+            {label:'C. Both players', value:'2'},
+            {label:'D. Neither player', value:'3'}
+          ])}
+        </div>
+        <div class="question-block" data-step="10">
+          <h3>Question 10: Quantum Reversible Circuit<br>What does this puzzle world represent?</h3>
+          ${optionButtons('cp4_q10', [
+            {label:'A. A cat collection game', value:'0'},
+            {label:'B. A circuit problem', value:'1'},
+            {label:'C. A drawing activity', value:'2'},
+            {label:'D. A random challenge', value:'3'}
+          ])}
+        </div>
+        
+        <!-- Part 2: Reflection 步驟 -->
+        <div class="question-block" data-step="11">
+          <h3>Part 2: Player Reflection (1/4)</h3>
+          <p style="margin-bottom: 8px; font-weight: bold;">Before playing this game, how familiar were you with quantum computing?</p>
+          ${optionButtons('cp4_ref1', [
+            {label:'Very familiar', value:'0'},
+            {label:'Somewhat familiar', value:'1'},
+            {label:'Heard of it', value:'2'},
+            {label:'Never learned it', value:'3'}
+          ])}
+        </div>
+        <div class="question-block" data-step="12">
+          <h3>Part 2: Player Reflection (2/4)</h3>
+          <p style="margin-bottom: 8px; font-weight: bold;">After playing this game, do you understand reversible operations better?</p>
+          ${optionButtons('cp4_ref2', [
+            {label:'Strongly agree', value:'0'},
+            {label:'Agree', value:'1'},
+            {label:'Neutral', value:'2'},
+            {label:'Disagree / Strongly disagree', value:'3'}
+          ])}
+        </div>
+        <div class="question-block" data-step="13">
+          <h3>Part 2: Player Reflection (3/4)</h3>
+          <p style="margin-bottom: 8px; font-weight: bold;">Which part helped you understand the concepts most?</p>
+          ${optionButtons('cp4_ref3', [
+            {label:'Cat features', value:'0'},
+            {label:'Fish movement', value:'1'},
+            {label:'Advanced moves', value:'2'},
+            {label:'Short solutions / Other', value:'3'}
+          ])}
+        </div>
+        <div class="question-block" data-step="14">
+          <h3>Part 2: Player Reflection (4/4)</h3>
+          <p style="margin-bottom: 8px; font-weight: bold;">What was your favorite part of this game?</p>
+          <textarea class="reflection-input" placeholder="Type your thoughts here..." oninput="state.answers.cp4_ref4=this.value; checkFinalCompletion();"></textarea>
         </div>
       `;
       updateStepUI();
     }
-
     function expectedAnswers(id) {
       return {
-        cp1: { cp1_q1: '1', cp1_q2: 'back' },
-        cp2: { cp2_horizontal: '0', cp2_vertical: '1', cp2_q2: 'more_features' },
-        cp3: { cp3_line_horizontal: '0', cp3_line_vertical: '1', cp3_line_diagonal: '2', cp3_line_dashed: '3', cp3_q2: 'copy_add', cp3_q3: '32' },
-        cp4: { cp4_q1: 'circuit_order', cp4_blank_time: 'Short', cp4_blank_gates: 'Few', cp4_blank_cost: 'Low' }
+        cp1: { cp1_q1: '1', cp1_q2: 'back', cp1_q3: 'move_state' },
+        cp2: { cp2_horizontal: '0', cp2_vertical: '1', cp2_q2: '0' },
+        cp3: { cp3_q1: '1', cp3_q2: '2', cp3_q3: '0', cp3_q4: '0' },
+        cp4: {
+          cp4_q1: '1', cp4_q2: '1', cp4_q3: '0', cp4_q4: '0',
+          cp4_q5: '1', cp4_q6: '0', cp4_q7: '0', cp4_q8: '0', cp4_q9: '1', cp4_q10: '1'
+        }
       }[id] || {};
     }
 
     function missingRequired() {
-      const expected = expectedAnswers(state.checkpointId);
-      const missing = Object.keys(expected).filter(key => !state.answers[key]);
+      const coreKeys = ['cp4_q1', 'cp4_q2', 'cp4_q3', 'cp4_q4', 'cp4_q5', 'cp4_q6', 'cp4_q7', 'cp4_q8', 'cp4_q9', 'cp4_q10'];
+      const missing = coreKeys.filter(key => !state.answers[key]);
       if (state.checkpointId === 'cp4') {
-        if (!(state.answers.cp4_reflect_before || '').trim()) missing.push('cp4_reflect_before');
-        if (!(state.answers.cp4_reflect_after || '').trim()) missing.push('cp4_reflect_after');
+        if (!state.answers['cp4_ref1']) missing.push('cp4_ref1');
+        if (!state.answers['cp4_ref2']) missing.push('cp4_ref2');
+        if (!state.answers['cp4_ref3']) missing.push('cp4_ref3');
+        if (!(state.answers['cp4_ref4'] || '').trim()) missing.push('cp4_ref4');
       }
       return missing;
+    }
+
+    // 檢查 Part 1 是否達到 85%（10題中至少答對 9 題）
+    function unresolvedMistakes() {
+      const expected = expectedAnswers(state.checkpointId) || {};
+      const coreKeys = ['cp4_q1', 'cp4_q2', 'cp4_q3', 'cp4_q4', 'cp4_q5', 'cp4_q6', 'cp4_q7', 'cp4_q8', 'cp4_q9', 'cp4_q10'];
+      if (state.checkpointId === 'cp4') {
+        let correctCount = coreKeys.filter(key => String(state.answers[key]) === String(expected[key])).length;
+        if (correctCount < 9) {
+          return ['not_enough_score']; // 錯超過 1 題（小於 90%，即未達 85% 門檻）
+        }
+        return [];
+      }
+      return Object.keys(state.mistakes).filter(key => state.mistakes[key] && String(state.answers[key]) !== String(expected[key]));
     }
 
     async function completeCheckpoint() {
@@ -1701,6 +1968,11 @@
 
       const cp = CHECKPOINTS[state.checkpointId];
       const stars = readStars();
+      
+      // 防呆機制：檢查這顆星星是否已經拿過了
+      const alreadyCollected = stars[state.checkpointId];
+
+      // 只有在還沒拿過的情況下才將該星星設為 true
       stars[state.checkpointId] = true;
       writeStars(stars);
 
@@ -1711,52 +1983,108 @@
       sessionStorage.setItem('meow_level', String(Math.min(upLvl, 18)));
       updateStarMeter();
 
+      // 防呆提示：如果是重複過關，可以微調提示文字讓玩家知道已經通關過了（選填）
+      if (alreadyCollected) {
+        document.getElementById('reward-copy').innerText = 'You already collected this star, but great job reviewing!';
+      } else {
+        document.getElementById('reward-copy').innerText = 'You successfully converted your discoveries into learning progress!';
+      }
+
+      // 播放 meow 音檔
+      try {
+        meowAudio.currentTime = 0;
+        meowAudio.play().catch(() => {});
+      } catch (e) {}
+
       document.getElementById('reward-title').innerText = cp.star;
-      document.getElementById('reward-copy').innerText = 'You successfully converted your discoveries into learning progress!';
-      document.getElementById('reward-modal').classList.add('show'); // 改為顯示彈跳視窗
+      document.getElementById('reward-modal').classList.add('show');
       document.getElementById('complete-btn').style.display = 'none';
       document.getElementById('status-line').innerText = '';
     }
-
     const QUESTION_STEPS = {
-      cp1_q1: 1, cp1_q2: 2,
+      cp1_q1: 1, cp1_q2: 2, cp1_q3: 3,
       cp2_horizontal: 1, cp2_vertical: 2, cp2_q2: 3,
-      cp3_line_horizontal: 1, cp3_line_vertical: 1, cp3_line_diagonal: 1, cp3_line_dashed: 1, cp3_q2: 2, cp3_q3: 3,
-      cp4_q1: 1, cp4_blank_time: 2, cp4_blank_gates: 2, cp4_blank_cost: 2
+      cp3_q1: 1, cp3_q2: 2, cp3_q3: 3, cp3_q4: 4,
+      cp4_q1: 1, cp4_q2: 2, cp4_q3: 3, cp4_q4: 4, cp4_q5: 5, cp4_q6: 6, cp4_q7: 7, cp4_q8: 8, cp4_q9: 9, cp4_q10: 10,
+      cp4_ref1: 11, cp4_ref2: 12, cp4_ref3: 13, cp4_ref4: 14
     };
-
     const QUESTION_META = {
       cp1_q1: {
         label: '1',
-        explanation: 'The two pairs differ by exactly one visible feature. When a fish is in the matching place, the node turns purple.'
+        explanation: 'Great observation! Connected cats differ by exactly <img src="./svg/dif3.png" alt="dif" style="width:25px; display:inline-block; vertical-align:middle; margin:0 4px;" />. Every move along an edge changes exactly one feature.',
+        wrong: 'Look carefully at the features of both cats. Compare them one by one. When two cats are connected, only one feature changes.'
       },
       cp1_q2: {
-        label: 'Returns to original position',
-        explanation: 'The first click swaps the fish, and the second click swaps them back. That is a reversible operation.'
+        label: 'The fish returns to its original position.',
+        explanation: 'Exactly! The first click changes the fish\'s position, and the second click brings it back. This type of move is called a reversible operation. It can return the fish to its original state.',
+        wrong: 'Try clicking the same edge twice and watch carefully. The fish does not disappear or keep moving forever. It returns to its original position.'
+      },
+      cp1_q3: {
+        label: 'B. A possible move that changes one state into another.',
+        explanation: 'The line represents a possible move between two states. When you click an edge, the fish moves from one state to another.',
+        wrong: 'Look at what happens when you click the line. The line allows the fish to move from one cat to another. It represents a move between states, not just a distance or decoration.'
       },
       cp2_horizontal: {
-        label: 'Feature card 1',
-        explanation: 'Horizontal edges change the first visible feature while keeping the other visible feature fixed.'
+        label: '<img src="./svg/dif3.png" alt="Feature 1" style="width:25px; display:inline-block; vertical-align:middle;" /> changes',
+        explanation: 'Great observation! Compare several cats connected by horizontal lines. You will find that only <img src="./svg/dif3.png" alt="Feature 1" style="width:25px; display:inline-block; vertical-align:middle; margin:0 4px;" /> changes, while the other feature stays the same. This means the horizontal direction represents changes in <img src="./svg/dif3.png" alt="Feature 1" style="width:25px; display:inline-block; vertical-align:middle; margin:0 4px;" />.',
+        wrong: 'Look at several horizontal connections. Compare the cats at both ends of each line. Which feature changes every time in this direction?'
       },
       cp2_vertical: {
-        label: 'Feature card 2',
-        explanation: 'Vertical edges change the second visible feature while keeping the other visible feature fixed.'
+        label: '<img src="./svg/dif2.png" alt="Feature 2" style="width:25px; display:inline-block; vertical-align:middle;" /> changes',
+        explanation: 'Exactly! Compare several cats connected by vertical lines. Only <img src="./svg/dif2.png" alt="Feature 2" style="width:25px; display:inline-block; vertical-align:middle; margin:0 4px;" /> changes, while the other feature stays the same. This means the vertical direction represents changes in <img src="./svg/dif2.png" alt="Feature 2" style="width:25px; display:inline-block; vertical-align:middle; margin:0 4px;" />.',
+        wrong: 'Look at several vertical connections. Compare the cats at both ends of each line. Which feature changes every time in this direction?'
       },
       cp2_q2: {
-        label: 'It changes more features at once',
-        explanation: 'Square Mode applies a larger structured move, so the fish can reach their targets in fewer steps.'
+        label: 'It applies the same move to multiple connected states at the same time.',
+        explanation: 'Correct! An Advanced Move applies the same move to several connected states together. Instead of repeating the same move many times, it can solve the puzzle with fewer moves.',
+        wrong: 'Watch what happens after using an Advanced Move. The puzzle rules do not change. Think about how many states are affected by one move.'
       },
-      cp3_line_horizontal: { label: 'Feature card 1', explanation: 'The horizontal edges show changes in the first visible feature.' },
-      cp3_line_vertical: { label: 'Feature card 2', explanation: 'The vertical edges show changes in the second visible feature.' },
-      cp3_line_diagonal: { label: 'Feature card 3', explanation: 'The diagonal edges connect the copied square layers, so they represent the third feature.' },
-      cp3_line_dashed: { label: 'Feature card 4', explanation: 'The dashed edges connect the two larger worlds, so they represent the newest feature direction.' },
-      cp3_q2: { label: 'B. Copy the original world and connect each state to its corresponding new state using the new feature.', explanation: 'A higher-dimensional world extends the lower-dimensional structure. It is not rebuilt from scratch.' },
-      cp3_q3: { label: 'C. 32 states', explanation: 'Five two-state features create 32 possible states.' },
-      cp4_q1: { label: 'Reversible circuit operation order', explanation: 'The path you built is an ordered sequence of reversible operations.' },
-      cp4_blank_time: { label: 'Shorter', explanation: 'Optimization looks for a shorter completion time.' },
-      cp4_blank_gates: { label: 'Fewer', explanation: 'Optimization looks for fewer gates.' },
-      cp4_blank_cost: { label: 'Lower', explanation: 'Optimization looks for a lower total cost.' }
+      cp3_q1: {
+        label: 'B. Copy the existing world and connect matching states using the new feature.',
+        explanation: 'Correct! The original world stays the same. A new feature creates another copy of the world, and matching states are connected together. This allows the world to grow while keeping the same rules.',
+        wrong: 'Think about how the puzzle becomes larger. Does the old world disappear, or is it used to build the new one?'
+      },
+      cp3_q2: {
+        label: 'C. 32',
+        explanation: 'Exactly! Each new feature doubles the number of possible states. With five features: 2 × 2 × 2 × 2 × 2 = 32. More features create more possible states.',
+        wrong: 'Think about what happens every time a new feature is added. How does the number of possible states change?'
+      },
+      cp3_q3: {
+        label: 'The fish reaches the target using fewer moves.',
+        explanation: 'Great observation! Both players reached exactly the same target. Player B found a way to solve the puzzle using fewer moves. This is a more efficient solution.',
+        wrong: 'Compare the two solutions carefully. Both players solved the same puzzle. Think about what is different between their solutions.'
+      },
+      cp3_q4: {
+        label: 'A. To reach the same target using fewer moves.',
+        explanation: 'Exactly! The goal stays the same. Instead of changing the puzzle, we try to find a shorter way to reach the same target. Finding a better way to solve the same puzzle is called optimization.',
+        wrong: 'Think about what changes when a solution becomes better. The puzzle is the same. The target is the same. Only the path becomes more efficient.'
+      },
+     cp4_q1: { label: 'B. A state with features', explanation: 'Great observation! Each cat represents a state. A state is described by its combination of features.', wrong: 'Look carefully at the cats. Compare their features and think about what makes each cat different.' },
+      cp4_q2: { label: 'B. One feature', explanation: 'Exactly! Connected cats differ by only one feature. Each move changes one part of the state.', wrong: 'Look at the two connected cats again. Compare their features one by one.' },
+      cp4_q3: { label: 'A. A possible state change', explanation: 'Correct! A connection represents a possible transformation. The fish can move from one state to another.', wrong: 'Watch the fish when it moves. Think about what changes after following the connection.' },
+      cp4_q4: { label: 'A. It goes back again', explanation: 'Exactly! A reversible operation can undo itself. The state returns to its original form.', wrong: 'Try repeating the same operation. Observe what happens after the second move.' },
+      cp4_q5: { label: 'B. It connects new states', explanation: 'Great observation! A new feature expands the existing world. The original structure stays, and new states are added.', wrong: 'Think about how new levels are created. Look at what happens when a new feature appears.' },
+      cp4_q6: { label: 'A. The basic rules', explanation: 'Correct! More features create a larger world. However, the same transformation rules still apply.', wrong: 'Compare puzzles with different numbers of features. Notice what changes and what stays the same.' },
+      cp4_q7: { label: 'A. It changes many states together', explanation: 'Exactly! An Advanced Move applies a related operation to multiple states at once. This can reduce the number of moves.', wrong: 'Look carefully at the result after using an Advanced Move. Compare it with a normal move.' },
+      cp4_q8: { label: 'A. A sequence of operations', explanation: 'Correct! Each move represents an operation. Together, the moves describe how the state changes.', wrong: 'Look back at your solution path. Think about what each move represents.' },
+      cp4_q9: { label: 'B. Player B', explanation: 'Great! Both solutions reach the same goal. The solution with fewer moves uses fewer operations.', wrong: 'Compare the two solutions carefully. Think about what is different between them.' },
+      cp4_q10: { label: 'B. A circuit problem', explanation: 'Congratulations! You discovered the hidden idea of the puzzle world. The game combines states, transformations, reversible operations, and efficient solutions which are important in quantum reversible circuits.', wrong: 'Think about everything you explored in the game. What ideas did you use to solve the puzzles?' }
     };
+    // 宣告 pop 音檔（與 Level 1 位置相同）
+    const popAudio = new Audio('pop.m4a');
+    const meowAudio = new Audio('meow.m4a');
+
+    function playPop() {
+      popAudio.currentTime = 0;
+      popAudio.play().catch(() => {});
+    }
+
+    // 全域監聽點擊事件，只要點到按鈕、選項、進度點等互動元素就會自動發出 pop 聲音
+    document.addEventListener('click', event => {
+      if (event.target.closest('button, .answer-btn, .feature-btn, .step-dot, .toggle-edge, .checkpoint-line')) {
+        playPop();
+      }
+    }, true);
 
     function init() {
       const params = new URLSearchParams(location.search);
