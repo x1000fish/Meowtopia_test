@@ -1350,30 +1350,26 @@
 
     function showQuestionFeedback(questionId, value) {
       const expected = expectedAnswers(state.checkpointId) || {};
-      
-      // 針對 CP4 後半段不計分的問卷題型（ref1, ref2, ref3），直接視為正確並允許進入下一步
-      const isReflection = ['cp4_ref1', 'cp4_ref2', 'cp4_ref3'].includes(questionId);
-      const isCorrect = isReflection || String(value) === String(expected[questionId]);
-
+      if (!Object.prototype.hasOwnProperty.call(expected, questionId)) return;
+      const feedback = document.querySelector(`[data-feedback="${questionId}"]`);
+      const isCorrect = String(value) === String(expected[questionId]);
       if (isCorrect) {
         delete state.mistakes[questionId];
       } else {
         state.mistakes[questionId] = true;
       }
-      
-      const feedback = document.querySelector(`[data-feedback="${questionId}"]`);
-      if (feedback && !isReflection) {
-        const meta = QUESTION_META[questionId] || {};
-        feedback.className = `feedback show ${isCorrect ? 'correct' : 'wrong'}`;
-        if (isCorrect) {
-          feedback.innerHTML = `Correct.<br>${meta.explanation || ''}`;
-        } else {
-          const wrongText = meta.wrong || `Review this question carefully.`;
-          feedback.innerHTML = `${wrongText}`;
-        }
+      if (!feedback) return;
+      const meta = QUESTION_META[questionId] || {};
+      feedback.className = `feedback show ${isCorrect ? 'correct' : 'wrong'}`;
+
+      // 刪除 The correct answer is... 提示，答錯時只顯示錯誤提示文字
+      if (isCorrect) {
+        feedback.innerHTML = `Correct.<br>${meta.explanation || ''}`;
+      } else {
+        const wrongText = meta.wrong || `Review this question carefully.`;
+        feedback.innerHTML = `${wrongText}`;
       }
 
-      // 只要該步驟完成（包含問卷題型），就會自動在右下角產生 NEXT 按鈕
       if (isStepAnswered(state.currentStep) && state.currentStep < state.totalSteps) {
         const activeBlock = document.querySelector(`.question-block[data-step="${state.currentStep}"]`);
         if (activeBlock) {
@@ -1399,15 +1395,28 @@
         }
       }, 100);
     }
+
     function feedbackSlot(questionId) {
       return `<div class="feedback" data-feedback="${questionId}"></div>`;
     }
 
     function unresolvedMistakes() {
       const expected = expectedAnswers(state.checkpointId) || {};
+      const coreKeys = ['cp4_q1', 'cp4_q2', 'cp4_q3', 'cp4_q4', 'cp4_q5', 'cp4_q6', 'cp4_q7', 'cp4_q8', 'cp4_q9', 'cp4_q10'];
+      
+      if (state.checkpointId === 'cp4') {
+        // 計算 Part 1 答對的題數
+        let correctCount = coreKeys.filter(key => String(state.answers[key]) === String(expected[key])).length;
+        
+        // 如果未滿 9 題（未達 90 分），回傳錯誤狀態阻擋通關
+        if (correctCount < 9) {
+          return ['not_enough_score'];
+        }
+        return [];
+      }
+      
       return Object.keys(state.mistakes).filter(key => state.mistakes[key] && String(state.answers[key]) !== String(expected[key]));
     }
-
     function clearAnswerForRetry(questionId) {
       delete state.answers[questionId];
       delete state.mistakes[questionId];
@@ -1456,8 +1465,7 @@
       state.currentStep = targetStep;
 
       updateStepUI();
-      document.getElementById('status-line').innerText = 'Retry mode: answer the missed questions again.';
-      
+           
       setTimeout(() => {
         const questionArea = document.getElementById('question-area') || document.getElementById('checkpoint-shell');
         if (questionArea) {
@@ -1797,7 +1805,6 @@
             {label:'D. A random object', value:'3'}
           ])}
         </div>
-
         <div class="question-block" data-step="2">
           <h3>Question 2: Connected States<br>How many features are different between two connected cats?</h3>
           ${optionButtons('cp4_q2', [
@@ -1919,6 +1926,7 @@
       `;
       updateStepUI();
     }
+
     function expectedAnswers(id) {
       return {
         cp1: { cp1_q1: '1', cp1_q2: 'back', cp1_q3: 'move_state' },
@@ -1932,29 +1940,13 @@
     }
 
     function missingRequired() {
-      const coreKeys = ['cp4_q1', 'cp4_q2', 'cp4_q3', 'cp4_q4', 'cp4_q5', 'cp4_q6', 'cp4_q7', 'cp4_q8', 'cp4_q9', 'cp4_q10'];
-      const missing = coreKeys.filter(key => !state.answers[key]);
+      const expected = expectedAnswers(state.checkpointId);
+      const missing = Object.keys(expected).filter(key => !state.answers[key]);
       if (state.checkpointId === 'cp4') {
-        if (!state.answers['cp4_ref1']) missing.push('cp4_ref1');
-        if (!state.answers['cp4_ref2']) missing.push('cp4_ref2');
-        if (!state.answers['cp4_ref3']) missing.push('cp4_ref3');
-        if (!(state.answers['cp4_ref4'] || '').trim()) missing.push('cp4_ref4');
+        if (!(state.answers.cp4_reflect_before || '').trim()) missing.push('cp4_reflect_before');
+        if (!(state.answers.cp4_reflect_after || '').trim()) missing.push('cp4_reflect_after');
       }
       return missing;
-    }
-
-    // 檢查 Part 1 是否達到 85%（10題中至少答對 9 題）
-    function unresolvedMistakes() {
-      const expected = expectedAnswers(state.checkpointId) || {};
-      const coreKeys = ['cp4_q1', 'cp4_q2', 'cp4_q3', 'cp4_q4', 'cp4_q5', 'cp4_q6', 'cp4_q7', 'cp4_q8', 'cp4_q9', 'cp4_q10'];
-      if (state.checkpointId === 'cp4') {
-        let correctCount = coreKeys.filter(key => String(state.answers[key]) === String(expected[key])).length;
-        if (correctCount < 9) {
-          return ['not_enough_score']; // 錯超過 1 題（小於 90%，即未達 85% 門檻）
-        }
-        return [];
-      }
-      return Object.keys(state.mistakes).filter(key => state.mistakes[key] && String(state.answers[key]) !== String(expected[key]));
     }
 
     async function completeCheckpoint() {
