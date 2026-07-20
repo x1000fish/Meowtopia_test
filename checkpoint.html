@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1200">
+  <title>Meowtopia - Learning Checkpoint</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Gaegu:wght@700&family=Titan+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Shrikhand&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #FFB7C5;
+      --green: #99C44D;
+      --dark: #463438;
+      --cream: #FFF9F0;
+      --blue: #5BA4CF;
+      --purple: #B583E5;
+      --gold: #FFB800;
+      --gray-light: #F3F4F6;
+      --gray-dark: #9CA3AF;
+    }
+
+    * { box-sizing: border-box; }
+
+    body, button, select, textarea, input, p, span, div {
+      font-family: Arial;
+    }
+    h1, .checkpoint-title {
+      font-family: 'Titan One', cursive !important;
+      letter-spacing: 1px;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: var(--cream);
+      background-image: linear-gradient(45deg, #fce4ec 25%, transparent 25%, transparent 50%, #fce4ec 50%, #fce4ec 75%, transparent 75%, transparent);
+      background-size: 80px 80px;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+    }
+
+    .checkpoint-shell {
+      width: min(1080px, 100%);
+      background: rgba(255, 255, 255, 0.98);
+      border: 5px solid var(--dark);
+      border-radius: 28px;
+      box-shadow: 12px 12px 0 var(--pink);
+      padding: 36px;
+    }
+
+    .header-section {
+      border-bottom: 4px dashed #E5E7EB;
+      padding-bottom: 20px;
+      margin-bottom: 28px;
+      width: 100%;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .checkpoint-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--green);
+      color: white;
+      border: 3px solid var(--dark);
+      border-radius: 999px;
+      padding: 8px 20px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 0 var(--dark);
+    }
+
+    .checkpoint-title {
+      font-family: 'Titan One', cursive !important;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: white;
+      -webkit-text-stroke: 2px var(--dark);
+      text-shadow: 3px 3px 0 var(--blue);
+      margin-top: 12px;
+      margin-bottom: 0;
+      letter-spacing: 2px;
+    }
+
+    .star-meter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      font-size: 1rem;
+      color: var(--dark);
+      background: #F9FAFB;
+      padding: 6px 18px; /* 縮小上下內距，使其與左側綠色長條等高 */
+      border-radius: 999px;
+      border: 3px solid var(--dark);
+      box-shadow: 0 4px 0 var(--dark);
+      height: 48px; /* 強制固定高度與左側綠色標籤相符 */
+      box-sizing: border-box;
+    }
+
+    .star-meter span {
+      font-size: 1.6rem; /* 稍微縮小星星大小以完美融入高度 */
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-shadow: 1px 1px 0 var(--dark);
+      transform: translateY(1px);
+    }
+
+    .scene-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .intro-panel,
+    .question-panel,
+    .reward-panel {
+      border: 4px solid var(--dark);
+      border-radius: 20px;
+      background: white;
+      padding: 32px;
+      box-shadow: 6px 6px 0 rgba(70, 52, 56, 0.1);
+    }
+    /* 彈跳視窗遮罩與內容樣式 */
+    .reward-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(70, 52, 56, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 24px;
+    }
+    .reward-modal-overlay.show {
+      display: flex;
+      animation: fadeIn 0.3s ease-out;
+    }
+    .reward-modal-content {
+      background: #FFF7D7;
+      border: 8px solid var(--dark);
+      border-radius: 36px;
+      padding: 36px;
+      text-align: center;
+      width: min(420px, 100%);
+      box-shadow: 12px 12px 0 var(--gold);
+      transform: scale(0.8);
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes popIn {
+      to { transform: scale(1); }
+    }
+
+    .intro-panel {
+      background: linear-gradient(145deg, #ffffff, #F9FAFB);
+    }
+
+    .intro-panel h2 {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--dark);
+      margin: 0 0 16px;
+      border-bottom: 4px solid var(--pink);
+      padding-bottom: 12px;
+      display: block;
+    }
+
+    .intro-panel p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #374151;
+      margin: 0 0 20px;
+    }
+
+    .concept-path { display: grid; gap: 12px; }
+
+    .concept-chip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: 2px solid #E5E7EB;
+      border-radius: 12px;
+      padding: 14px 18px;
+      background: white;
+      font-size: 1.05rem;
+      transition: border-color 0.2s;
+    }
+    .concept-chip:hover { border-color: var(--blue); }
+    .concept-chip span { color: #6B7280; font-weight: bold; }
+    .concept-chip strong { color: var(--blue); font-weight: 900; font-size: 1.1rem; }
+
+    .step-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px dashed #E5E7EB;
+    }
+    
+    .step-progress {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .step-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--gray-light);
+      border: 2px solid var(--gray-dark);
+      transition: all 0.3s;
+      cursor: pointer;
+      padding: 0;
+    }
+    .step-dot:hover {
+      border-color: var(--dark);
+      transform: scale(1.15);
+    }
+    .step-dot.active {
+      background: var(--gold);
+      border-color: var(--dark);
+      transform: scale(1.3);
+    }
+    .step-dot.done {
+      background: var(--green);
+      border-color: var(--dark);
+    }
+    .step-dot:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .question-block {
+      display: none;
+      animation: fadeInRight 0.4s ease forwards;
+    }
+    .question-block.active {
+      display: block;
+    }
+
+    @keyframes fadeInRight {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .question-panel h3 {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--dark);
+      margin: 0 0 20px;
+      line-height: 1.5;
+    }
+
+    .visual-board {
+      min-height: 200px;
+      border: 3px solid #E5E7EB;
+      border-radius: 16px;
+      background: white;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .checkpoint-board {
+      min-height: 250px;
+      border: 6px solid var(--dark);
+      border-radius: 32px;
+      background: #fffaf5;
+      box-shadow: 8px 8px 0 var(--pink);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .checkpoint-node {
+      width: 140px;
+      height: 140px;
+      background: white;
+      border: 6px solid var(--dark);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      box-shadow: 3px 3px 0 var(--dark);
+      z-index: 20;
+      transition: background 0.3s ease;
+    }
+    .checkpoint-node.node-correct { background: #ebceff; }
+    .checkpoint-node img {
+      width: 98px;
+      height: auto;
+      pointer-events: none;
+      transform: scale(1.05) translateY(-5px) translateX(-2px);
+    }
+
+    .checkpoint-line {
+      position: absolute;
+      background: var(--dark);
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .checkpoint-line:hover,
+    .checkpoint-line.line-highlight {
+      background: var(--green) !important;
+      box-shadow: 0 0 15px rgba(153, 196, 77, 0.8) !important;
+      z-index: 16 !important;
+    }
+    .checkpoint-line::after {
+      content: '';
+      position: absolute;
+      top: -15px;
+      bottom: -15px;
+      left: -15px;
+      right: -15px;
+      background: transparent;
+    }
+
+    .checkpoint-fish {
+      width: 80px;
+      height: 80px;
+      position: absolute;
+      z-index: 30;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translate(-50%, -50%);
+      transition: top 0.5s cubic-bezier(0.16, 1, 0.3, 1), left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .checkpoint-fish img {
+      width: 75px;
+      height: auto;
+      transform: scale(1.05) translateY(-8px);
+    }
+
+    .level1-board .checkpoint-line { height: 8px; top: 50%; left: 140px; right: 140px; transform: translateY(-50%); }
+    .level1-board .node-left { top: 50%; left: 30px; transform: translateY(-50%); }
+    .level1-board .node-right { top: 50%; right: 30px; transform: translateY(-50%); }
+    .level1-board .slot-left { top: 50%; left: 100px; }
+    .level1-board .slot-right { top: 50%; left: calc(100% - 100px); }
+    .cp2-lab {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 16px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+    .path-controls {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+    .path-btn {
+      min-height: 58px;
+      border: 3px solid var(--dark);
+      border-radius: 14px;
+      background: white;
+      color: var(--dark);
+      font-size: 0.95rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--dark);
+      transition: all 0.15s ease;
+    }
+    .path-btn:hover {
+      transform: translateY(-2px);
+      background: #F0F9FF;
+      box-shadow: 0 6px 0 var(--dark);
+    }
+    .multi-toggle-btn {
+      min-height: 58px;
+      min-width: 118px;
+      border: 4px solid var(--dark);
+      border-radius: 20px;
+      padding: 6px 14px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--dark);
+      text-shadow: 2px 2px 0 var(--dark);
+      transition: all 0.1s ease;
+    }
+    .multi-toggle-btn.mode-4 { background: #b583e5; }
+    .multi-toggle-btn.mode-8 { background: #46c89d; }
+    .multi-toggle-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 var(--dark);
+    }
+    .cp2-board {
+      min-height: 320px;
+      margin-bottom: 0;
+    }
+    .cp2-board .checkpoint-node {
+      width: 96px;
+      height: 96px;
+      border-width: 5px;
+    }
+    .cp2-board .checkpoint-node img {
+      width: 74px;
+      transform: scale(1.02) translateY(-4px) translateX(-1px);
+    }
+    .cp2-board .fixed-number {
+      position: absolute;
+      bottom: -5px;
+      right: 31px;
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--dark);
+      pointer-events: none;
+      z-index: 25;
+    }
+    .cp2-board .checkpoint-fish {
+      width: 62px;
+      height: 62px;
+    }
+    .cp2-board .checkpoint-fish img { width: 58px; }
+    .cp2-node-0 { top: 30px; left: 62px; }
+    .cp2-node-1 { top: 30px; right: 62px; }
+    .cp2-node-2 { bottom: 30px; left: 62px; }
+    .cp2-node-3 { bottom: 30px; right: 62px; }
+    .cp2-slot-0 { top: 106px; left: 110px; }
+    .cp2-slot-1 { top: 106px; left: calc(100% - 110px); }
+    .cp2-slot-2 { top: calc(100% - 63px); left: 110px; }
+    .cp2-slot-3 { top: calc(100% - 63px); left: calc(100% - 110px); }
+    .cp2-line-h {
+      height: 8px;
+      left: 155px;
+      right: 155px;
+    }
+    .cp2-line-v {
+      width: 8px;
+      top: 110px;
+      bottom: 110px;
+    }
+    #cp2-line-h-0 { top: 78px; }
+    #cp2-line-h-1 { bottom: 78px; }
+    #cp2-line-v-0 { left: 110px; }
+    #cp2-line-v-1 { right: 110px; }
+
+    .feedback {
+      display: none;
+      margin-top: 14px;
+      border: 2px solid #E5E7EB;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-weight: bold;
+      line-height: 1.6;
+    }
+    .feedback.show { display: block; }
+    .feedback.correct {
+      background: #F0FDF4;
+      border-color: var(--green);
+      color: #276749;
+    }
+    .feedback.wrong {
+      background: #FFF7ED;
+      border-color: var(--gold);
+      color: #7C2D12;
+    }
+
+    .answer-btn:disabled,
+    .feature-btn:disabled,
+    .match-row select:disabled {
+      cursor: default;
+      transform: none;
+    }
+    .answer-btn.locked:not(.selected),
+    .feature-btn.locked:not(.selected) {
+      opacity: 0.5;
+    }
+    .answer-btn.locked.selected,
+    .feature-btn.locked.selected {
+      opacity: 1;
+    }
+
+    .cp3-board {
+      height: 420px;
+      margin-bottom: 26px;
+    }
+    .cp3-line {
+      position: absolute;
+      height: 4px;
+      background: var(--dark);
+      transform-origin: 0 50%;
+      border-radius: 999px;
+      opacity: 0.9;
+      z-index: 4;
+    }
+    .cp3-line.dashed {
+      height: 0;
+      background: transparent;
+      border-top: 4px dashed var(--dark);
+      opacity: 0.45;
+    }
+    .cp3-line.horizontal { background: #629eed; }
+    .cp3-line.vertical { background: #99C44D; }
+    .cp3-line.diagonal { background: #b583e5; }
+    .cp3-line.dashed { border-top-color: #463438; }
+    .cp3-mini-node {
+      width: 58px;
+      height: 58px;
+      border: 4px solid var(--dark);
+      border-radius: 50%;
+      background: #ebceff;
+      box-shadow: 2px 2px 0 var(--dark);
+      position: absolute;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cp3-mini-node img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+    .cp3-mini-node .cp3-fish-mini {
+      width: 24px;
+      height: 24px;
+      position: absolute;
+      left: 50%;
+      bottom: 3px;
+      transform: translateX(-50%);
+      filter: drop-shadow(0 1px 0 white);
+      z-index: 12;
+    }
+    .cp3-mini-node.far-copy img {
+      filter: grayscale(1) saturate(0.35) brightness(0.98);
+    }
+    .line-question-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 16px;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.05rem;
+      background: #F9FAFB;
+      padding: 16px;
+      border-radius: 16px;
+      border: 2px solid #E5E7EB;
+    }
+    .line-question-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--dark);
+    }
+    .line-question-row .feature-options { margin-top: 0; }
+    .line-question-row .feature-btn { min-height: 70px; border-width: 2px; }
+    .line-legend {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: -8px 0 22px;
+      font-weight: 900;
+      color: var(--dark);
+    }
+    .line-legend span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+    .legend-stroke {
+      width: 34px;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--dark);
+      display: inline-block;
+    }
+    .legend-stroke.horizontal { background: #629eed; }
+    .legend-stroke.vertical { background: #99C44D; transform: rotate(90deg); }
+    .legend-stroke.diagonal { background: #b583e5; transform: rotate(-35deg); }
+    .legend-stroke.dashed { height: 0; border-top: 4px dashed var(--dark); background: transparent; }
+
+    .mini-node {
+      width: 90px;
+      height: 90px;
+      border: 3px solid var(--dark);
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      z-index: 2;
+    }
+
+    .mini-node img { max-width: 60px; max-height: 60px; object-fit: contain; }
+    .mini-label { display: none; }
+
+    .edge-line {
+      position: absolute;
+      height: 4px;
+      background: var(--dark);
+      z-index: 1;
+    }
+    .edge-line.vertical { width: 4px; height: 140px; }
+
+    .toggle-demo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0; 
+      padding: 40px 20px;
+    }
+
+    .toggle-demo .mini-node { position: relative; inset: auto; margin: 0; }
+
+    .toggle-edge {
+      width: 120px;
+      height: 6px;
+      background: var(--dark);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+      z-index: 1;
+      border-radius: 4px;
+    }
+    .toggle-edge::after {
+      content: '';
+      position: absolute;
+      top: -20px; bottom: -20px; left: 0; right: 0;
+    }
+    .toggle-edge:hover { background: var(--blue); transform: scaleY(1.5); }
+    .toggle-edge.active {
+      background: var(--purple);
+      box-shadow: 0 0 0 6px rgba(181, 131, 229, 0.25);
+    }
+
+    .fish-dot {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      top: 50%;
+      left: calc(50% - 105px); 
+      transform: translate(-50%, -50%);
+      transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 5;
+    }
+    .fish-dot.right { left: calc(50% + 105px); }
+    .fish-dot img { width: 100%; height: 100%; object-fit: contain; }
+
+    .hypercube-2bit { height: 320px; }
+    .hypercube-2bit .node-00 { left: 80px; top: 45px; }
+    .hypercube-2bit .node-01 { right: 80px; top: 45px; }
+    .hypercube-2bit .node-10 { left: 80px; bottom: 45px; }
+    .hypercube-2bit .node-11 { right: 80px; bottom: 45px; }
+    .hypercube-2bit .edge-top { left: 125px; top: 88px; width: calc(100% - 250px); }
+    .hypercube-2bit .edge-bottom { left: 125px; bottom: 88px; width: calc(100% - 250px); }
+    .hypercube-2bit .edge-left { left: 123px; top: 90px; height: calc(100% - 180px); width: 4px; }
+    .hypercube-2bit .edge-right { right: 123px; top: 90px; height: calc(100% - 180px); width: 4px; }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .answer-btn, .feature-btn {
+      min-height: 64px;
+      border: 3px solid #E5E7EB;
+      border-radius: 12px;
+      background: white;
+      color: #374151;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    .answer-btn:hover, .feature-btn:hover {
+      border-color: var(--blue);
+      background: #F0F9FF;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(91, 164, 207, 0.15);
+    }
+
+    .answer-btn.selected, .feature-btn.selected {
+      background: var(--gold);
+      color: var(--dark);
+      border-color: var(--dark);
+      box-shadow: 0 4px 0 var(--dark);
+      transform: translateY(-2px);
+    }
+
+    .feature-options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .feature-btn {
+      min-height: 100px;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .feature-btn img { width: 48px; height: 48px; object-fit: contain; }
+    .feature-btn small { font-size: 0.9rem; color: #6B7280; }
+    .feature-btn.selected small { color: var(--dark); }
+
+    .matching-grid { display: grid; gap: 16px; margin-top: 16px; }
+
+    .match-feature-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 16px;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.05rem;
+      background: #F9FAFB;
+      padding: 16px;
+      border-radius: 16px;
+      border: 2px solid #E5E7EB;
+    }
+
+    .match-feature-row .feature-options { margin-top: 0; }
+    .match-feature-row .feature-btn { min-height: 70px; border-width: 2px; }
+
+    .match-row {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 16px;
+      align-items: center;
+      font-weight: bold;
+    }
+
+    .match-row select, .reflection-input {
+      width: 100%;
+      border: 2px solid #D1D5DB;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 1.05rem;
+      background: white;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .match-row select:focus, .reflection-input:focus { border-color: var(--blue); }
+
+    .reflection-input { min-height: 120px; resize: vertical; }
+
+    .dimension-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .dimension-card {
+      border: 2px solid #E5E7EB;
+      border-radius: 16px;
+      background: white;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-weight: bold;
+      color: #4B5563;
+    }
+    .dimension-card img { width: 56px; height: 56px; object-fit: contain; }
+
+    .step-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .step-box {
+      border: 2px solid #E5E7EB;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      background: #F9FAFB;
+      font-weight: bold;
+      color: #6B7280;
+    }
+
+    .step-box strong {
+      display: block;
+      font-size: 3.5rem;
+      color: var(--blue);
+      line-height: 1;
+      margin: 12px 0;
+    }
+
+    .reward-panel {
+      display: none;
+      text-align: center;
+      margin-top: 32px;
+      background: #FFFAF0;
+      border-color: var(--gold);
+    }
+    .reward-panel.show { display: block; animation: slideUp 0.4s ease-out; }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .reward-star {
+      font-size: 6rem;
+      color: var(--gold);
+      text-shadow: 4px 4px 0 var(--dark);
+      animation: starPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      margin: 10px 0 20px;
+    }
+
+    @keyframes starPop {
+      0% { transform: scale(0.2) rotate(-30deg); opacity: 0; }
+      50% { transform: scale(1.2) rotate(10deg); }
+      100% { transform: scale(1) rotate(0); opacity: 1; }
+    }
+
+    .game-btn {
+      cursor: pointer;
+      border: 5px solid var(--dark);
+      border-radius: 60px;
+      padding: 12px 24px;
+      font-size: 20px;
+      font-weight: 900;
+      color: white;
+      text-shadow: 2px 2px 0 var(--dark);
+      box-shadow: 0 6px 0 var(--dark);
+      position: relative;
+      transition: transform 0.15s, box-shadow 0.15s, top 0.1s;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .game-btn:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 10px 0 var(--dark);
+    }
+    .game-btn:active {
+      top: 4px;
+      box-shadow: 0 2px 0 var(--dark);
+      transform: translateY(0);
+    }
+    .game-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: 0 6px 0 var(--dark) !important;
+      top: 0;
+      filter: grayscale(0.5);
+    }
+    .btn-blue { background: var(--blue); }
+    .btn-green { background: var(--green); }
+    .btn-red { background: var(--pink); }
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 3px dashed #E5E7EB;
+    }
+
+    .status-line {
+      min-height: 30px;
+      margin-top: 16px;
+      font-weight: bold;
+      color: var(--blue);
+      text-align: center;
+    }
+
+    .certificate { text-align: center; display: none; }
+    .certificate.show { display: block; animation: slideUp 0.5s ease; }
+
+    .certificate-box {
+      border: 5px solid var(--dark);
+      border-radius: 28px;
+      background: linear-gradient(135deg, #FFFAF0, #FFF3C4);
+      padding: 48px;
+      box-shadow: 12px 12px 0 var(--green);
+      margin: 0 auto 36px;
+      max-width: 700px;
+    }
+
+    .certificate h2 {
+      color: var(--dark);
+      font-size: 3rem;
+      font-weight: 900;
+      margin: 0 0 24px;
+    }
+
+    .certificate-list {
+      display: grid;
+      gap: 16px;
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: left;
+      font-size: 1.2rem;
+      font-weight: bold;
+      background: white;
+      padding: 32px;
+      border-radius: 20px;
+      border: 3px solid #E5E7EB;
+    }
+    
+    .certificate-list div { display: flex; align-items: center; gap: 12px; }
+    .certificate-list div::before {
+      content: '★';
+      color: var(--green);
+      font-size: 1.4rem;
+    }
+
+    @media (max-width: 900px) {
+      .scene-grid { grid-template-columns: 1fr; }
+      .header-top { flex-direction: column; align-items: stretch; text-align: center; gap: 10px; }
+      .checkpoint-label, .star-meter { justify-content: center; }
+      .feature-options, .dimension-strip { grid-template-columns: repeat(2, 1fr); }
+      .cp2-lab { grid-template-columns: 1fr; }
+      .path-controls { grid-template-columns: repeat(3, 1fr); }
+      .line-question-row { grid-template-columns: 1fr; }
+      .actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section id="checkpoint-shell" class="checkpoint-shell">
+     <div class="header-section">
+        <div class="header-top">
+          <div id="checkpoint-label" class="checkpoint-label">Checkpoint 1</div>
+          <div class="star-meter">
+            Quantum Stars
+            <span id="star-meter">☆☆☆☆</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="checkpoint-content">
+        <div class="scene-grid">
+          <aside class="intro-panel">
+            <h2 id="intro-title"></h2>
+            <p id="intro-copy"></p>
+            <div id="concept-path" class="concept-path"></div>
+          </aside>
+          
+          <section id="question-area" class="question-panel">
+          </section>
+        </div>
+        
+        <!-- 獎勵彈跳視窗 -->
+      <div id="reward-modal" class="reward-modal-overlay">
+        <div class="reward-modal-content">
+          <div class="reward-star">★</div>
+          <h2 id="reward-title" style="font-size: 2.2rem; color: var(--dark); font-weight: 900; margin-bottom: 10px;"></h2>
+          <p id="reward-copy" style="font-size: 1.1rem; margin: 0 0 24px; color: #4B5563; font-weight: bold;"></p>
+          <div class="flex justify-center items-center gap-3">
+            <button onclick="location.href='index.html'" class="game-btn btn-blue" style="font-size: 18px; padding: 10px 20px;">HOME</button>
+            <button onclick="location.reload()" class="game-btn btn-green" style="width: 58px; height: 58px; min-width: 58px; border-radius: 50%; padding: 0; display: inline-flex; align-items: center; justify-content: center; margin: 0; box-sizing: border-box;" aria-label="Play again" title="Play again">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="#fff" style="width: 28px; height: 28px; filter: drop-shadow(2px 2px 0 #463438);">
+                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4C7.58 4 4 7.58 4 12s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-3.06c-.77 1.76-2.54 3-4.67 3c-2.76 0-5-2.24-5-5s2.24-5 5-5c1.38 0 2.63.56 3.54 1.46L12 12h8V4z" />
+                </svg>
+            </button>
+            <button id="reward-next" class="game-btn btn-green" style="font-size: 18px; padding: 10px 20px;">CONTINUE</button>
+          </div>
+        </div>
+      </div>
+        <div class="actions">
+         <button onclick="location.href='index.html'" class="game-btn btn-blue">HOME</button>
+          <button id="complete-btn" class="game-btn btn-green" disabled>CLAIM STAR</button>
+        </div>
+        <div id="status-line" class="status-line"></div>
+      </div>
+
+      <div id="certificate-content" class="certificate">
+        <div class="certificate-box">
+          <h2>Quantum Explorer Certificate</h2>
+          <div class="reward-star">★</div>
+          <div class="certificate-list">
+            <div>State Exploration</div>
+            <div>Hypercube Discovery</div>
+            <div>Dimension Expansion</div>
+            <div>Circuit Optimization</div>
+          </div>
+        </div>
+        <button onclick="location.href='index.html'" class="game-btn btn-blue">HOME</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const CHECKPOINT_SCRIPT_URL = '';
+    const SKIN_STORAGE_KEY = 'meowtopiaSkin';
+    const STAR_KEYS = ['cp1', 'cp2', 'cp3', 'cp4'];
+    const STAR_NAMES = {
+      cp1: 'State Explorer Star',
+      cp2: 'Hypercube Explorer Star',
+      cp3: 'Dimension Explorer Star',
+      cp4: 'Quantum Optimization Star'
+    };
+    
+    const CHECKPOINTS = {
+      cp1: {
+        title: 'Checkpoint 1', star: STAR_NAMES.cp1, next: 'level2.html',
+        introTitle: 'State Explorer',
+        intro: 'Great work finishing the first level. These questions help you name the pattern you discovered while clicking edges, swapping fish, and matching each fish to its cat.',
+        concepts: [['Cat Node', 'State'], ['Edge', 'Transformation'], ['Double Tap', 'Revert State']],
+        stepsCount: 2
+      },
+      cp2: {
+        title: 'Checkpoint 2', star: STAR_NAMES.cp2, next: 'level5.html',
+        introTitle: 'Hypercube Explorer',
+        intro: 'In the two-feature world, each edge direction changes one visible feature.',
+        concepts: [['Dimension', 'Feature'], ['Edge Direction', 'Feature Change'], ['Big Move', 'Shorter Path']],
+        stepsCount: 3
+      },
+      cp3: {
+        title: 'Checkpoint 3', star: STAR_NAMES.cp3, next: 'level11.html',
+        introTitle: 'Dimension Explorer',
+        intro: 'As features increase, the world doesn\'t restart. It duplicates the original world and links the two together with the new feature.',
+        concepts: [['2 features', '4 states'], ['3 features', '8 states'], ['4 features', '16 states'], ['New feature', 'New direction']],
+        stepsCount: 3
+      },
+      cp4: {
+        title: 'Checkpoint 4', star: STAR_NAMES.cp4, next: 'checkpoint.html?certificate=1',
+        introTitle: 'Quantum Optimization',
+        intro: 'In the end, you weren\'t just moving a fish. You were arranging the order of reversible operations. Shorter, fewer, and lower cost: these are the real goals of quantum reversible circuit synthesis.',
+        concepts: [['Cat Node', 'State'], ['Edge', 'Reversible Gate'], ['Path', 'Circuit Order'], ['Optimization', 'Cost Reduction']],
+        stepsCount: 3
+      }
+    };
+
+    const state = {
+      checkpointId: 'cp1',
+      answers: {},
+      startedAt: Date.now(),
+      attempts: 0,
+      toggleClicks: 0,
+      demoFishRight: false,
+      mistakes: {},
+      cp1FishAtNode: [0, 1],
+      cp2FishAtNode: [0, 1, 2, 3],
+      currentStep: 1,
+      totalSteps: 2
+    };
+
+    function getUser() { return sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || 'Guest'; }
+    function getStarsKey() { return `meow_checkpoint_stars_${getUser()}`; }
+    function defaultStars() { return { cp1: false, cp2: false, cp3: false, cp4: false }; }
+    function readStars() {
+      try { return { ...defaultStars(), ...JSON.parse(localStorage.getItem(getStarsKey()) || sessionStorage.getItem('checkpointStars') || '{}') }; }
+      catch { return defaultStars(); }
+    }
+    function writeStars(stars) {
+      const normalized = { ...defaultStars(), ...stars };
+      localStorage.setItem(getStarsKey(), JSON.stringify(normalized));
+      sessionStorage.setItem('checkpointStars', JSON.stringify(normalized));
+    }
+    function updateStarMeter() {
+      const stars = readStars();
+      document.getElementById('star-meter').innerText = STAR_KEYS.map(id => stars[id] ? '★' : '☆').join('');
+    }
+
+    function currentSkin() {
+      const skin = sessionStorage.getItem(SKIN_STORAGE_KEY) || 'default';
+      return ['default', 'rip', 'poto', 'mj'].includes(skin) ? skin : 'default';
+    }
+    function featureImageIndex(index) {
+      return Math.max(0, 3 - Number(index));
+    }
+    function featureSrc(index) {
+      const imageIndex = featureImageIndex(index);
+      const skin = currentSkin();
+      if (skin === 'rip') return `./RIP/dif${imageIndex}.png`;
+      if (skin === 'poto') return `./poto/dif${imageIndex}.png`;
+      if (skin === 'mj') return `./mj/dif${imageIndex}.png`;
+      return `./svg/dif${imageIndex}.png`;
+    }
+    function codeFor(index, bits = 1) { return index.toString(2).padStart(Math.max(bits, 3), '0'); }
+    function defaultCatSrc(index, bits = 1) { return `./svg/${codeFor(index, bits)}-c.svg`; }
+    function defaultFishSrc(index, bits = 1) { return `./svg/${codeFor(index, bits)}-f.svg`; }
+    function catSrc(index, bits = 1) {
+      const skin = currentSkin();
+      if (skin === 'rip') return `./RIP/Cat${index + 1}.png`;
+      if (skin === 'poto') return `./poto/cat${index}.png`;
+      if (skin === 'mj') return `./mj/Cat${index}.png`;
+      return defaultCatSrc(index, bits);
+    }
+    function fishSrc(index, bits = 1) {
+      const skin = currentSkin();
+      if (skin === 'rip') return `./RIP/Fish${index + 1}.png`;
+      if (skin === 'poto') return `./poto/fish${index}.png`;
+      if (skin === 'mj') return `./mj/Fish${index}.png`;
+      return defaultFishSrc(index, bits);
+    }
+
+    // Step navigation
+    function renderStepHeader(totalSteps) {
+      let dots = Array.from({length: totalSteps}).map((_, i) => `
+        <button class="step-dot" id="dot-${i+1}" type="button" onclick="goToStep(${i + 1})" aria-label="Question ${i + 1}"></button>
+      `).join('');
+      return `
+        <div class="step-header">
+          <div class="step-progress">${dots}</div>
+        </div>
+      `;
+    }
+
+    function stepQuestionIds(step) {
+      const expected = expectedAnswers(state.checkpointId) || {};
+      return Object.keys(expected).filter(key => QUESTION_STEPS[key] === step);
+    }
+
+    function isStepAnswered(step) {
+      const ids = stepQuestionIds(step);
+      return ids.length === 0 || ids.every(hasAnswer);
+    }
+
+    function canVisitStep(step) {
+      if (step <= 1) return true;
+      for (let i = 1; i < step; i++) {
+        if (!isStepAnswered(i)) return false;
+      }
+      return true;
+    }
+
+    function updateStepUI() {
+      document.querySelectorAll('.step-dot').forEach((dot, index) => {
+        const step = index + 1;
+        const active = step === state.currentStep;
+        dot.classList.toggle('active', active);
+        dot.classList.toggle('done', !active && isStepAnswered(step));
+        dot.disabled = !canVisitStep(step);
+      });
+      document.querySelectorAll('.question-block').forEach(block => {
+        block.classList.toggle('active', parseInt(block.dataset.step) === state.currentStep);
+      });
+      checkFinalCompletion();
+    }
+
+    function goToStep(step) {
+      if (!canVisitStep(step)) return;
+      state.currentStep = Math.max(1, Math.min(state.totalSteps, step));
+      updateStepUI();
+    }
+
+    function nextStep() {
+      if (state.currentStep < state.totalSteps) {
+        state.currentStep++;
+        updateStepUI();
+        
+        // 點擊 NEXT 後自動平滑往上滑動到題目區或頂部
+        setTimeout(() => {
+          const questionArea = document.getElementById('question-area') || document.getElementById('checkpoint-shell');
+          if (questionArea) {
+            questionArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 50);
+      }
+    }
+
+    function prevStep() {
+      if (state.currentStep > 1) {
+        state.currentStep--;
+        updateStepUI();
+      }
+    }
+
+    function selectAnswer(questionId, value) {
+      if (hasAnswer(questionId)) return;
+      state.answers[questionId] = value;
+      document.querySelectorAll(`[data-question="${questionId}"]`).forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.value === String(value));
+      });
+      document.getElementById('status-line').innerText = '';
+      showQuestionFeedback(questionId, value);
+      lockQuestion(questionId);
+      checkFinalCompletion();
+      updateStepUI();
+    }
+
+    function selectDropdownAnswer(questionId, value) {
+      if (!value || hasAnswer(questionId)) return;
+      state.answers[questionId] = value;
+      showQuestionFeedback(questionId, value);
+      lockQuestion(questionId);
+      checkFinalCompletion();
+      updateStepUI();
+    }
+
+    function lockQuestion(questionId) {
+      document.querySelectorAll(`[data-question="${questionId}"]`).forEach(btn => {
+        btn.disabled = true;
+        btn.classList.add('locked');
+      });
+      const select = document.getElementById(questionId);
+      if (select) select.disabled = true;
+    }
+
+    function hasAnswer(key) { return state.answers[key] !== undefined && state.answers[key] !== ''; }
+
+    function checkFinalCompletion() {
+      const btn = document.getElementById('complete-btn');
+      if (!btn) return;
+      const missing = missingRequired();
+      const wrong = unresolvedMistakes();
+      if (missing.length === 0) {
+        btn.disabled = false;
+        btn.innerText = wrong.length ? 'RETRY MISSED' : 'CLAIM STAR';
+        btn.style.animation = 'starPop 0.5s ease forwards';
+      } else {
+        btn.disabled = true;
+        btn.innerText = 'CLAIM STAR';
+      }
+    }
+
+    function showQuestionFeedback(questionId, value) {
+      const expected = expectedAnswers(state.checkpointId) || {};
+      if (!Object.prototype.hasOwnProperty.call(expected, questionId)) return;
+      const feedback = document.querySelector(`[data-feedback="${questionId}"]`);
+      const isCorrect = String(value) === String(expected[questionId]);
+      if (isCorrect) {
+        delete state.mistakes[questionId];
+      } else {
+        state.mistakes[questionId] = true;
+      }
+      if (!feedback) return;
+      const meta = QUESTION_META[questionId] || {};
+      feedback.className = `feedback show ${isCorrect ? 'correct' : 'wrong'}`;
+
+      feedback.innerHTML = isCorrect
+        ? `Correct. ${meta.explanation || ''}`
+        : `Review this later: the correct answer is "${meta.label || expected[questionId]}." ${meta.explanation || ''}`;
+
+      if (isStepAnswered(state.currentStep) && state.currentStep < state.totalSteps) {
+        const activeBlock = document.querySelector(`.question-block[data-step="${state.currentStep}"]`);
+        if (activeBlock) {
+          let nextContainer = activeBlock.querySelector('.step-next-container');
+          if (!nextContainer) {
+            nextContainer = document.createElement('div');
+            nextContainer.className = 'step-next-container';
+            nextContainer.style.display = 'flex';
+            nextContainer.style.justifyContent = 'flex-end';
+            nextContainer.style.marginTop = '24px';
+            activeBlock.appendChild(nextContainer);
+          }
+          nextContainer.innerHTML = `<button onclick="nextStep()" class="game-btn btn-blue" style="font-size: 18px; padding: 8px 28px; border-width: 4px;">NEXT ➜</button>`;
+        }
+      }
+
+      // 讓畫面平滑滾動到詳解與按鈕的位置，避免被邊框擋住
+      setTimeout(() => {
+        const actionsArea = document.querySelector('.actions') || document.getElementById('complete-btn');
+        if (actionsArea) {
+          actionsArea.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        } else {
+          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+      }, 100);
+    }
+
+    function feedbackSlot(questionId) {
+      return `<div class="feedback" data-feedback="${questionId}"></div>`;
+    }
+
+    function unresolvedMistakes() {
+      const expected = expectedAnswers(state.checkpointId) || {};
+      return Object.keys(state.mistakes).filter(key => state.mistakes[key] && String(state.answers[key]) !== String(expected[key]));
+    }
+
+    function clearAnswerForRetry(questionId) {
+      delete state.answers[questionId];
+      delete state.mistakes[questionId];
+      document.querySelectorAll(`[data-question="${questionId}"]`).forEach(btn => {
+        btn.classList.remove('selected', 'locked');
+        btn.disabled = false;
+      });
+      const select = document.getElementById(questionId);
+      if (select) {
+        select.value = '';
+        select.disabled = false;
+      }
+      const feedback = document.querySelector(`[data-feedback="${questionId}"]`);
+      if (feedback) {
+        feedback.className = 'feedback';
+        feedback.innerHTML = '';
+      }
+      // Remove any generated next buttons in the step block
+      const step = QUESTION_STEPS[questionId];
+      if (step) {
+        const block = document.querySelector(`.question-block[data-step="${step}"]`);
+        if (block) {
+          const nextContainer = block.querySelector('.step-next-container');
+          if (nextContainer) nextContainer.remove();
+        }
+      }
+    }
+
+    function startMistakeRetry() {
+      const wrong = unresolvedMistakes();
+      if (!wrong.length) return;
+      const first = wrong[0];
+      clearAnswerForRetry(first);
+      state.currentStep = QUESTION_STEPS[first] || 1;
+      updateStepUI();
+      document.getElementById('status-line').innerText = 'Retry mode: answer the missed question again.';
+
+      // 點擊 RETRY MISSED 後自動平滑往上滑動到題目區
+      setTimeout(() => {
+        const questionArea = document.getElementById('question-area') || document.getElementById('checkpoint-shell');
+        if (questionArea) {
+          questionArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 50);
+    }
+
+    function optionButtons(questionId, options) {
+      return `<div class="option-grid">${options.map(option => `
+        <button class="answer-btn" data-question="${questionId}" data-value="${option.value}" onclick="selectAnswer('${questionId}', '${option.value.replace(/'/g, "\\'")}')">${option.label}</button>
+      `).join('')}</div>${feedbackSlot(questionId)}`;
+    }
+    function featureButtons(questionId, count = 4) {
+      return `<div class="feature-options">${Array.from({ length: count }, (_, index) => `
+        <button class="feature-btn" data-question="${questionId}" data-value="${index}" onclick="selectAnswer('${questionId}', '${index}')">
+          <img src="${featureSrc(index)}" alt="Feature ${index + 1}">
+          <small>Feature ${index + 1}</small>
+        </button>
+      `).join('')}</div>${feedbackSlot(questionId)}`;
+    }
+    function nodeHtml(index, bits, cls, label) {
+      return `<div class="mini-node ${cls}"><img src="${catSrc(index, bits)}" alt="${label}"></div>`;
+    }
+
+    function renderIntro(cp) {
+      document.getElementById('checkpoint-label').innerText = `${cp.title} - ${cp.star}`;
+      document.getElementById('intro-title').innerText = cp.introTitle;
+      document.getElementById('intro-copy').innerText = cp.intro;
+      document.getElementById('concept-path').innerHTML = cp.concepts.map(pair => `
+        <div class="concept-chip"><span>${pair[0]}</span><strong>${pair[1]}</strong></div>
+      `).join('');
+      state.totalSteps = cp.stepsCount;
+    }
+    function level1Board(interactive = false) {
+      const correctClass = interactive ? 'node-correct' : 'node-correct';
+      const click = interactive ? ' onclick="toggleCP1Demo()"' : '';
+      const title = interactive ? ' title="Click twice"' : '';
+      return `
+        <div class="checkpoint-board level1-board">
+          <div class="checkpoint-line"${click}${title}></div>
+          <div data-cp1-node="0" class="checkpoint-node node-left ${correctClass}"><img src="${defaultCatSrc(0, 1)}" alt="left cat"></div>
+          <div data-cp1-node="1" class="checkpoint-node node-right ${correctClass}"><img src="${defaultCatSrc(1, 1)}" alt="right cat"></div>
+          <div data-cp1-fish="0" class="checkpoint-fish slot-left"><img src="${defaultFishSrc(0, 1)}" alt="left fish"></div>
+          <div data-cp1-fish="1" class="checkpoint-fish slot-right"><img src="${defaultFishSrc(1, 1)}" alt="right fish"></div>
+        </div>
+      `;
+    }
+
+    function toggleCP1Demo() {
+      state.toggleClicks += 1;
+      state.cp1FishAtNode = state.cp1FishAtNode.map(node => node === 0 ? 1 : 0);
+      updateCP1DemoUI();
+      if (state.toggleClicks >= 2 && state.cp1FishAtNode[0] === 0 && state.cp1FishAtNode[1] === 1) {
+        document.getElementById('status-line').innerText = 'Clicking the same edge twice returns the fish to their original places.';
+      }
+    }
+
+    function updateCP1DemoUI() {
+      [0, 1].forEach(fish => {
+        document.querySelectorAll(`[data-cp1-fish="${fish}"]`).forEach(el => {
+          el.classList.toggle('slot-left', state.cp1FishAtNode[fish] === 0);
+          el.classList.toggle('slot-right', state.cp1FishAtNode[fish] === 1);
+        });
+      });
+      [0, 1].forEach(node => {
+        document.querySelectorAll(`[data-cp1-node="${node}"]`).forEach(el => {
+          el.classList.toggle('node-correct', state.cp1FishAtNode[node] === node);
+        });
+      });
+    }
+
+    function renderCP1() {
+      state.cp1FishAtNode = [0, 1];
+      state.toggleClicks = 0;
+      document.getElementById('question-area').innerHTML = `
+        ${renderStepHeader(2)}
+        <div class="question-block active" data-step="1">
+          ${level1Board(true)}
+          <h3>1. Look at the left pair and the right pair. How many visible features are different?</h3>
+          ${optionButtons('cp1_q1', [{label:'0', value:'0'}, {label:'1', value:'1'}, {label:'2', value:'2'}, {label:'3', value:'3'}])}
+        </div>
+        <div class="question-block" data-step="2">
+          ${level1Board(true)}
+          <h3>2. Try clicking the same edge twice. What happens to the fish?</h3>
+          ${optionButtons('cp1_q2', [
+            {label:'Returns to original position', value:'back'},
+            {label:'Keeps moving forward', value:'move'},
+            {label:'Disappears entirely', value:'gone'}
+          ])}
+        </div>
+      `;
+      updateCP1DemoUI();
+      updateStepUI();
+    }
+
+    function cp2Board() {
+      return `
+        <div class="cp2-lab">
+          <div class="path-controls">
+            <button class="multi-toggle-btn mode-4" onclick="applyCP2Move('horizontal')" onmouseover="highlightCP2Lines('horizontal', true)" onmouseout="highlightCP2Lines('horizontal', false)">Square Mode H</button>
+            <button class="multi-toggle-btn mode-4" onclick="applyCP2Move('vertical')" onmouseover="highlightCP2Lines('vertical', true)" onmouseout="highlightCP2Lines('vertical', false)">Square Mode V</button>
+            <button class="path-btn" onclick="resetCP2Demo()">Reset</button>
+          </div>
+          <div class="checkpoint-board cp2-board">
+            <div id="cp2-line-h-0" class="checkpoint-line cp2-line-h"></div>
+            <div id="cp2-line-h-1" class="checkpoint-line cp2-line-h"></div>
+            <div id="cp2-line-v-0" class="checkpoint-line cp2-line-v"></div>
+            <div id="cp2-line-v-1" class="checkpoint-line cp2-line-v"></div>
+            ${[0, 1, 2, 3].map(index => `
+              <div id="cp2-node-${index}" class="checkpoint-node cp2-node-${index} node-correct">
+                <div class="fixed-number">${codeFor(index, 2).slice(-2)}</div>
+                <img src="${defaultCatSrc(index, 2)}" alt="${codeFor(index, 2).slice(-2)} cat">
+              </div>
+            `).join('')}
+            ${[0, 1, 2, 3].map(index => `
+              <div id="cp2-fish-${index}" class="checkpoint-fish cp2-slot-${index}">
+                <img src="${defaultFishSrc(index, 2)}" alt="${codeFor(index, 2).slice(-2)} fish">
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function swapCP2Pairs(pairs) {
+      state.cp2FishAtNode = state.cp2FishAtNode.map(node => {
+        for (const [a, b] of pairs) {
+          if (node === a) return b;
+          if (node === b) return a;
+        }
+        return node;
+      });
+      updateCP2DemoUI();
+    }
+
+    function applyCP2Move(type) {
+      if (type === 'horizontal') swapCP2Pairs([[0, 1], [2, 3]]);
+      if (type === 'vertical') swapCP2Pairs([[0, 2], [1, 3]]);
+    }
+
+    function resetCP2Demo() {
+      state.cp2FishAtNode = [0, 1, 2, 3];
+      updateCP2DemoUI();
+    }
+
+    function highlightCP2Lines(type, active) {
+      const ids = type === 'horizontal' ? ['cp2-line-h-0', 'cp2-line-h-1'] : ['cp2-line-v-0', 'cp2-line-v-1'];
+      ids.forEach(id => document.getElementById(id)?.classList.toggle('line-highlight', active));
+    }
+
+    function updateCP2DemoUI() {
+      state.cp2FishAtNode.forEach((node, fish) => {
+        const el = document.getElementById(`cp2-fish-${fish}`);
+        if (!el) return;
+        [0, 1, 2, 3].forEach(slot => el.classList.toggle(`cp2-slot-${slot}`, slot === node));
+      });
+      [0, 1, 2, 3].forEach(node => {
+        const el = document.getElementById(`cp2-node-${node}`);
+        if (el) el.classList.toggle('node-correct', state.cp2FishAtNode[node] === node);
+      });
+    }
+
+    function renderCP2() {
+      resetCP2Demo();
+      document.getElementById('question-area').innerHTML = `
+        ${renderStepHeader(3)}
+        ${cp2Board()}
+        <div class="question-block active" data-step="1">
+          <h3>1. Which feature card changes along the horizontal edges? Try Square Mode H first.</h3>
+          ${featureButtons('cp2_horizontal', 2)}
+        </div>
+        <div class="question-block" data-step="2">
+          <h3>2. Which feature card changes along the vertical edges? Try Square Mode V and watch the fish swap.</h3>
+          ${featureButtons('cp2_vertical', 2)}
+        </div>
+        <div class="question-block" data-step="3">
+          <h3>3. Why is a "Big Move" faster?</h3>
+          <div class="step-comparison">
+            <div class="step-box">Normal path<strong>8</strong>steps</div>
+            <div class="step-box">Special move<strong>3</strong>steps</div>
+          </div>
+          ${optionButtons('cp2_q2', [
+            {label:'It changes more features at once', value:'more_features'},
+            {label:'It looks prettier on the board', value:'pretty'},
+            {label:'It is easier to click', value:'easy'}
+          ])}
+        </div>
+      `;
+      updateCP2DemoUI();
+      updateStepUI();
+    }
+
+    function cp3Board() {
+      const scale = 0.68;
+      const offsetX = 118;
+      const offsetY = 215;
+      const getPos = (i) => {
+        let x = (i & 1) ? 120 : 0;
+        let y = (i & 2) ? 120 : 0;
+        if (i & 4) {
+          x += (i & 1) ? 90 : -80;
+          y += (i & 2) ? 80 : -80;
+        }
+        if (i & 8) {
+          x += 400;
+          y -= 80;
+        }
+        return { x: x * scale + offsetX, y: y * scale + offsetY };
+      };
+      const lineClass = ['horizontal', 'vertical', 'diagonal', 'dashed'];
+      let html = '<div class="visual-board cp3-board">';
+      for (let i = 0; i < 16; i++) {
+        for (let edgeType = 0; edgeType < 4; edgeType++) {
+          const j = i ^ (1 << edgeType);
+          if (j <= i) continue;
+          const p1 = getPos(i);
+          const p2 = getPos(j);
+          const len = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+          const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
+          html += `<div class="cp3-line ${lineClass[edgeType]}" style="left:${p1.x}px; top:${p1.y}px; width:${len}px; transform:rotate(${angle}deg);"></div>`;
+        }
+      }
+      for (let i = 0; i < 16; i++) {
+        const p = getPos(i);
+        const assetIndex = i & 7;
+        html += `
+          <div class="cp3-mini-node ${i >= 8 ? 'far-copy' : ''}" style="left:${p.x}px; top:${p.y}px; transform:translate(-50%, -50%);">
+            <img src="${defaultCatSrc(assetIndex, 3)}" alt="cat state">
+            <img class="cp3-fish-mini" src="${defaultFishSrc(assetIndex, 3)}" alt="fish state">
+          </div>
+        `;
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function lineFeatureQuestion(questionId, label, strokeClass) {
+      return `
+        <div class="line-question-row">
+          <span class="line-question-label"><i class="legend-stroke ${strokeClass}"></i>${label}</span>
+          ${featureButtons(questionId, 4)}
+        </div>
+      `;
+    }
+
+    function renderCP3() {
+      document.getElementById('question-area').innerHTML = `
+        ${renderStepHeader(3)}
+        ${cp3Board()}
+        <div class="question-block active" data-step="1">
+          <h3>1. Match each edge style to the feature card it changes.</h3>
+          <div class="matching-grid">
+            ${lineFeatureQuestion('cp3_line_horizontal', 'Horizontal edges', 'horizontal')}
+            ${lineFeatureQuestion('cp3_line_vertical', 'Vertical edges', 'vertical')}
+            ${lineFeatureQuestion('cp3_line_diagonal', 'Diagonal edges', 'diagonal')}
+            ${lineFeatureQuestion('cp3_line_dashed', 'Dashed edges', 'dashed')}
+          </div>
+        </div>
+        <div class="question-block" data-step="2">
+          <h3>2. A new feature is added to the game world. How is a higher-dimensional world created from the existing one?</h3>
+          ${optionButtons('cp3_q2', [
+            {label:'A. Redesign all cats and states from scratch.', value:'redesign'},
+            {label:'B. Copy the original world and connect each state to its corresponding new state using the new feature.', value:'copy_add'},
+            {label:'C. Randomly add new cats without following existing patterns.', value:'random'}
+          ])}
+        </div>
+        <div class="question-block" data-step="3">
+          <h3>3. If the game contains 5 different features, and each feature has two possible states, how many different cat and fish states will exist?</h3>
+          ${optionButtons('cp3_q3', [
+            {label:'A. 16 states', value:'16'},
+            {label:'B. 25 states', value:'25'},
+            {label:'C. 32 states', value:'32'},
+            {label:'D. 64 states', value:'64'}
+          ])}
+        </div>
+      `;
+      updateStepUI();
+    }
+
+    function renderCP4() {
+      document.getElementById('question-area').innerHTML = `
+        ${renderStepHeader(3)}
+        <div class="visual-board" style="padding: 24px; min-height: auto;">
+          <div class="step-comparison" style="margin: 0;">
+            <div class="step-box">Circuit order<strong>Path</strong>operations</div>
+            <div class="step-box">Optimization<strong>Less</strong>time, gates, cost</div>
+          </div>
+        </div>
+        
+        <div class="question-block active" data-step="1">
+          <h3>1. The movement path completed by the player represents:</h3>
+          ${optionButtons('cp4_q1', [
+            {label:'A simple fish movement log', value:'fish_log'},
+            {label:'State transition path', value:'state_path'},
+            {label:'Reversible circuit operation order', value:'circuit_order'}
+          ])}
+        </div>
+        <div class="question-block" data-step="2">
+          <h3>2. Real quantum reversible circuit synthesis aims to find:</h3>
+          <div class="matching-grid">
+            <label class="match-row">Time:
+              <select id="cp4_blank_time" onchange="selectDropdownAnswer('cp4_blank_time', this.value);">
+                <option value="">Select...</option><option value="Short">Shorter</option><option value="More">More</option><option value="High">Higher</option>
+              </select>
+            </label>
+            ${feedbackSlot('cp4_blank_time')}
+            <label class="match-row">Gates:
+              <select id="cp4_blank_gates" onchange="selectDropdownAnswer('cp4_blank_gates', this.value);">
+                <option value="">Select...</option><option value="Few">Fewer</option><option value="Long">Longer</option><option value="Slow">Slower</option>
+              </select>
+            </label>
+            ${feedbackSlot('cp4_blank_gates')}
+            <label class="match-row">Cost:
+              <select id="cp4_blank_cost" onchange="selectDropdownAnswer('cp4_blank_cost', this.value);">
+                <option value="">Select...</option><option value="Low">Lower</option><option value="Messy">Messier</option><option value="Thick">Thicker</option>
+              </select>
+            </label>
+            ${feedbackSlot('cp4_blank_cost')}
+          </div>
+        </div>
+        <div class="question-block" data-step="3">
+          <h3>3. Reflection</h3>
+          <p style="margin-bottom: 8px; font-weight: bold;">When you first started playing, what did you think you were doing?</p>
+          <textarea class="reflection-input" placeholder="Type your thoughts here..." oninput="state.answers.cp4_reflect_before=this.value; checkFinalCompletion();"></textarea>
+          
+          <p style="margin: 20px 0 8px; font-weight: bold;">By the end, what do you think you were actually doing?</p>
+          <textarea class="reflection-input" placeholder="Type your thoughts here..." oninput="state.answers.cp4_reflect_after=this.value; checkFinalCompletion();"></textarea>
+        </div>
+      `;
+      updateStepUI();
+    }
+
+    function expectedAnswers(id) {
+      return {
+        cp1: { cp1_q1: '1', cp1_q2: 'back' },
+        cp2: { cp2_horizontal: '0', cp2_vertical: '1', cp2_q2: 'more_features' },
+        cp3: { cp3_line_horizontal: '0', cp3_line_vertical: '1', cp3_line_diagonal: '2', cp3_line_dashed: '3', cp3_q2: 'copy_add', cp3_q3: '32' },
+        cp4: { cp4_q1: 'circuit_order', cp4_blank_time: 'Short', cp4_blank_gates: 'Few', cp4_blank_cost: 'Low' }
+      }[id] || {};
+    }
+
+    function missingRequired() {
+      const expected = expectedAnswers(state.checkpointId);
+      const missing = Object.keys(expected).filter(key => !state.answers[key]);
+      if (state.checkpointId === 'cp4') {
+        if (!(state.answers.cp4_reflect_before || '').trim()) missing.push('cp4_reflect_before');
+        if (!(state.answers.cp4_reflect_after || '').trim()) missing.push('cp4_reflect_after');
+      }
+      return missing;
+    }
+
+    async function completeCheckpoint() {
+      state.attempts += 1;
+      const missing = missingRequired();
+      if (missing.length > 0) return;
+      if (unresolvedMistakes().length > 0) {
+        startMistakeRetry();
+        return;
+      }
+
+      const cp = CHECKPOINTS[state.checkpointId];
+      const stars = readStars();
+      stars[state.checkpointId] = true;
+      writeStars(stars);
+
+      const nextLevel = { cp1: 2, cp2: 5, cp3: 11, cp4: 19 }[state.checkpointId];
+      const curLvl = Math.max(parseInt(sessionStorage.getItem('currentLevel') || '1'), parseInt(sessionStorage.getItem('meow_level') || '1'));
+      const upLvl = Math.max(curLvl, nextLevel);
+      sessionStorage.setItem('currentLevel', String(upLvl));
+      sessionStorage.setItem('meow_level', String(Math.min(upLvl, 18)));
+      updateStarMeter();
+
+      document.getElementById('reward-title').innerText = cp.star;
+      document.getElementById('reward-copy').innerText = 'You successfully converted your discoveries into learning progress!';
+      document.getElementById('reward-modal').classList.add('show'); // 改為顯示彈跳視窗
+      document.getElementById('complete-btn').style.display = 'none';
+      document.getElementById('status-line').innerText = '';
+    }
+
+    const QUESTION_STEPS = {
+      cp1_q1: 1, cp1_q2: 2,
+      cp2_horizontal: 1, cp2_vertical: 2, cp2_q2: 3,
+      cp3_line_horizontal: 1, cp3_line_vertical: 1, cp3_line_diagonal: 1, cp3_line_dashed: 1, cp3_q2: 2, cp3_q3: 3,
+      cp4_q1: 1, cp4_blank_time: 2, cp4_blank_gates: 2, cp4_blank_cost: 2
+    };
+
+    const QUESTION_META = {
+      cp1_q1: {
+        label: '1',
+        explanation: 'The two pairs differ by exactly one visible feature. When a fish is in the matching place, the node turns purple.'
+      },
+      cp1_q2: {
+        label: 'Returns to original position',
+        explanation: 'The first click swaps the fish, and the second click swaps them back. That is a reversible operation.'
+      },
+      cp2_horizontal: {
+        label: 'Feature card 1',
+        explanation: 'Horizontal edges change the first visible feature while keeping the other visible feature fixed.'
+      },
+      cp2_vertical: {
+        label: 'Feature card 2',
+        explanation: 'Vertical edges change the second visible feature while keeping the other visible feature fixed.'
+      },
+      cp2_q2: {
+        label: 'It changes more features at once',
+        explanation: 'Square Mode applies a larger structured move, so the fish can reach their targets in fewer steps.'
+      },
+      cp3_line_horizontal: { label: 'Feature card 1', explanation: 'The horizontal edges show changes in the first visible feature.' },
+      cp3_line_vertical: { label: 'Feature card 2', explanation: 'The vertical edges show changes in the second visible feature.' },
+      cp3_line_diagonal: { label: 'Feature card 3', explanation: 'The diagonal edges connect the copied square layers, so they represent the third feature.' },
+      cp3_line_dashed: { label: 'Feature card 4', explanation: 'The dashed edges connect the two larger worlds, so they represent the newest feature direction.' },
+      cp3_q2: { label: 'B. Copy the original world and connect each state to its corresponding new state using the new feature.', explanation: 'A higher-dimensional world extends the lower-dimensional structure. It is not rebuilt from scratch.' },
+      cp3_q3: { label: 'C. 32 states', explanation: 'Five two-state features create 32 possible states.' },
+      cp4_q1: { label: 'Reversible circuit operation order', explanation: 'The path you built is an ordered sequence of reversible operations.' },
+      cp4_blank_time: { label: 'Shorter', explanation: 'Optimization looks for a shorter completion time.' },
+      cp4_blank_gates: { label: 'Fewer', explanation: 'Optimization looks for fewer gates.' },
+      cp4_blank_cost: { label: 'Lower', explanation: 'Optimization looks for a lower total cost.' }
+    };
+
+    function init() {
+      const params = new URLSearchParams(location.search);
+      state.checkpointId = params.get('id') || 'cp1';
+      updateStarMeter();
+
+      if (params.get('certificate') === '1') {
+        if (STAR_KEYS.every(key => readStars()[key])) {
+          document.getElementById('checkpoint-content').style.display = 'none';
+          document.getElementById('certificate-content').classList.add('show');
+          document.getElementById('checkpoint-label').innerText = 'Certificate';
+          document.getElementById('checkpoint-title').innerText = 'Quantum Explorer Certificate';
+        } else location.href = 'checkpoint.html?id=cp4';
+        return;
+      }
+
+      if (!CHECKPOINTS[state.checkpointId]) state.checkpointId = 'cp1';
+      const cp = CHECKPOINTS[state.checkpointId];
+      renderIntro(cp);
+      if (state.checkpointId === 'cp1') renderCP1();
+      if (state.checkpointId === 'cp2') renderCP2();
+      if (state.checkpointId === 'cp3') renderCP3();
+      if (state.checkpointId === 'cp4') renderCP4();
+
+      document.getElementById('complete-btn').onclick = completeCheckpoint;
+      document.getElementById('reward-next').onclick = () => location.href = cp.next;
+    }
+
+    init();
+  </script>
+</body>
+</html>
