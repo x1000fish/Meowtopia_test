@@ -355,6 +355,8 @@
       grid-template-columns: repeat(6, 1fr);
       gap: 20px;
       padding: 20px;
+      justify-items: center;
+      align-items: center;
     }
 
     .level-node {
@@ -387,30 +389,64 @@
       cursor: not-allowed;
       box-shadow: 0 6px 0 #ccc;
       border-color: #ccc;
+      opacity: 1;
+    }
+
+    .level-node.locked:hover {
+      transform: none;
+    }
+
+    /* Certificate button keeps its own blue identity when locked - just muted, never see-through */
+    .level-node.certificate-node.locked {
+      background: #bcd7e8;
+      color: #eef6fb;
+      border-color: #8fb3c7;
+      box-shadow: 0 6px 0 #8fb3c7;
+      text-shadow: 1px 1px 0 rgba(70, 52, 56, 0.35);
     }
 
     .level-node.checkpoint-node {
+      width: 76px;
+      height: 76px;
       flex-direction: column;
       gap: 2px;
-      border-radius: 24px;
+      border-radius: 20px;
       background: #fff7d7;
-      box-shadow: 0 6px 0 #FFB800;
+      box-shadow: 0 5px 0 #FFB800;
       font-size: 14px;
       line-height: 1.05;
       text-align: center;
-      padding: 8px;
+      padding: 6px;
     }
 
-    .level-node.checkpoint-node .node-star {
-      font-size: 30px;
-      line-height: 1;
-      color: #FFB800;
-      text-shadow: 1px 1px 0 var(--dark);
+    .level-node.checkpoint-node .node-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .level-node.checkpoint-node .node-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      /* icon itself: rounded, no border, no shadow */
     }
 
     .level-node.checkpoint-node.completed {
       background: #fff2b0;
       border-color: var(--dark);
+    }
+
+    .level-node.checkpoint-node.crown-node {
+      background: #eef4ff;
+      box-shadow: 0 5px 0 var(--blue);
+    }
+
+    .level-node.checkpoint-node.crown-node.completed {
+      background: #e2edff;
     }
 
     .level-node.certificate-node {
@@ -420,7 +456,8 @@
       background: var(--blue);
       color: white;
       box-shadow: 0 6px 0 var(--dark);
-      font-size: 17px;
+      font-size: 24px;
+      font-weight: 900;
       text-shadow: 1px 1px 0 var(--dark);
     }
 
@@ -515,6 +552,7 @@
       .player-side { justify-content: space-between; }
       .map-container { grid-template-columns: repeat(3, 1fr); gap: 16px; }
       .level-node { width: 88px; height: 88px; }
+      .level-node.checkpoint-node { width: 68px; height: 68px; }
       .level-node.certificate-node { grid-column: span 3; width: 100%; }
     }
   </style>
@@ -586,7 +624,7 @@
           <button id="edit-profile-btn" onclick="openProfileEditor()" class="game-btn btn-blue mini-btn">EDIT</button>
           <div class="quantum-stars" aria-label="Quantum Stars">
             <div class="quantum-stars-label">Quantum Stars</div>
-            <div id="quantum-stars" class="star-icons">☆☆☆☆</div>
+            <div id="quantum-stars" class="star-icons">☆☆☆</div>
           </div>
           <div class="text-right">
             <div class="text-sm font-black" style="color:#99C44D">PROGRESS</div>
@@ -643,6 +681,19 @@
     const PHOTO_SCALE_KEY = 'playerPhotoScale';
     const GUEST_KEY = 'isGuest';
     const STAR_KEYS = ['cp1', 'cp2', 'cp3', 'cp4'];
+    const METER_STAR_KEYS = ['cp1', 'cp2', 'cp3']; // cp4 為皇冠(最終挑戰)，不計入星星收集數
+
+    // 圓角、無邊框、無陰影的星星／皇冠圖案：領到的顏色較深（黃），沒領到的顏色較淡
+    function starIconSVG(earned) {
+      const fill = earned ? '#FFC400' : '#FFE9AE';
+      const opacity = earned ? '1' : '0.65';
+      return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.5c.35 0 .66.21.79.53l2.3 5.53 5.96.5c.75.06 1.06.99.49 1.48l-4.53 3.93 1.38 5.82c.17.73-.62 1.31-1.27.92L12 17.98l-5.12 3.23c-.65.39-1.44-.19-1.27-.92l1.38-5.82L2.46 10.5c-.57-.49-.26-1.42.49-1.48l5.96-.5 2.3-5.53c.13-.32.44-.53.79-.53Z" fill="${fill}" fill-opacity="${opacity}" stroke="none" stroke-linejoin="round"/></svg>`;
+    }
+    function crownIconSVG(earned) {
+      const fill = earned ? '#FFC400' : '#D9E4F5';
+      const opacity = earned ? '1' : '0.75';
+      return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 8.2c.83 0 1.5.67 1.5 1.5 0 .2-.04.39-.11.56l1.86 3.34 3.16-5.1a1.5 1.5 0 1 1 2.18 0l3.16 5.1 1.86-3.34a1.5 1.5 0 1 1 1.39.94l-1.98 6.6c-.13.43-.53.72-.98.72H6.46c-.45 0-.85-.29-.98-.72l-1.98-6.6a1.5 1.5 0 0 1-1-1.4c0-.83.67-1.5 1.5-1.5Z" fill="${fill}" fill-opacity="${opacity}" stroke="none" stroke-linejoin="round"/></svg>`;
+    }
     const popAudio = new Audio('pop.m4a');
     let pendingEditPhoto = '';
 
@@ -730,7 +781,7 @@
     function renderQuantumStars() {
       const stars = readCheckpointStars();
       const target = document.getElementById('quantum-stars');
-      if (target) target.innerText = STAR_KEYS.map(id => stars[id] ? '★' : '☆').join('');
+      if (target) target.innerText = METER_STAR_KEYS.map(id => stars[id] ? '★' : '☆').join('');
     }
 
     function renderAvatar(targetId, photo = sessionStorage.getItem(PHOTO_KEY) || localStorage.getItem(PHOTO_KEY), photoX = getPhotoX(), photoY = getPhotoY(), photoScale = getPhotoScale()) {
@@ -900,6 +951,7 @@
       const meowLv = Math.min(Math.max(getStoredLevel() || 1, 1), 19);
       const displayLevel = Math.min(meowLv, 18);
       const stars = readCheckpointStars();
+      const isGuest = sessionStorage.getItem(GUEST_KEY) === 'true';
 
       document.getElementById('auth-card').classList.add('hidden');
       document.getElementById('meow-map').classList.remove('hidden');
@@ -942,7 +994,7 @@
         node.className = 'level-node';
         if (item.type === 'level') {
           node.innerText = item.level;
-          if (item.level === 1 || item.level <= displayLevel) {
+          if (isGuest || item.level === 1 || item.level <= displayLevel) {
             node.href = `level${item.level}.html`;
           } else {
             node.classList.add('locked');
@@ -953,10 +1005,13 @@
           }
         } else if (item.type === 'checkpoint') {
           const completed = Boolean(stars[item.id]);
+          const isFinal = item.id === 'cp4';
           node.classList.add('checkpoint-node');
+          if (isFinal) node.classList.add('crown-node');
           if (completed) node.classList.add('completed');
-          node.innerHTML = `<span class="node-star">${completed ? '★' : '☆'}</span><span>${item.label}</span>`;
-          if (meowLv >= item.unlockLevel || completed) {
+          node.title = isFinal ? 'Final Challenge' : item.label;
+          node.innerHTML = `<span class="node-icon">${isFinal ? crownIconSVG(completed) : starIconSVG(completed)}</span>`;
+          if (isGuest || meowLv >= item.unlockLevel || completed) {
             node.href = `checkpoint.html?id=${item.id}`;
           } else {
             node.classList.add('locked');
@@ -966,7 +1021,7 @@
             };
           }
         } else {
-          const unlocked = STAR_KEYS.every(id => stars[id]);
+          const unlocked = isGuest || STAR_KEYS.every(id => stars[id]);
           node.classList.add('certificate-node');
           node.innerText = 'Certificate';
           if (unlocked) {
@@ -975,7 +1030,7 @@
             node.classList.add('locked');
             node.onclick = event => {
               event.preventDefault();
-              alert('Collect all 4 Quantum Stars to unlock the certificate.');
+              alert('Collect all 3 Quantum Stars and complete the Final Challenge to unlock the certificate.');
             };
           }
         }
