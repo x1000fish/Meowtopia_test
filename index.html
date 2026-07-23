@@ -449,6 +449,17 @@
       background: #e2edff;
     }
 
+    /* Locked checkpoint / Final Challenge nodes: shadow should match the grey
+       "locked" look used everywhere else, instead of keeping their unlocked
+       yellow/blue shadow color. */
+    .level-node.checkpoint-node.locked {
+      box-shadow: 0 5px 0 #ccc;
+    }
+
+    .level-node.checkpoint-node.crown-node.locked {
+      box-shadow: 0 5px 0 #ccc;
+    }
+
     .level-node.certificate-node {
       grid-column: span 2;
       width: 220px;
