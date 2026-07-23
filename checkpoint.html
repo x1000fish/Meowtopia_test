@@ -52,7 +52,7 @@
     }
 
     .checkpoint-shell {
-      width: min(1400px, 97%); /* 加寬外框，讓 intro 面板可以變寬同時題目面板維持固定尺寸 */
+      width: min(1400px, 97%);
       background: rgba(255, 255, 255, 0.98);
       border: 5px solid var(--dark);
       border-radius: 28px;
@@ -110,16 +110,16 @@
       font-size: 1rem;
       color: var(--dark);
       background: #F9FAFB;
-      padding: 6px 18px; /* 縮小上下內距，使其與左側綠色長條等高 */
+      padding: 6px 18px;
       border-radius: 999px;
       border: 3px solid var(--dark);
       box-shadow: 0 4px 0 var(--dark);
-      height: 48px; /* 強制固定高度與左側綠色標籤相符 */
+      height: 48px;
       box-sizing: border-box;
     }
 
     .star-meter span {
-      font-size: 1.6rem; /* 稍微縮小星星大小以完美融入高度 */
+      font-size: 1.6rem;
       color: var(--gold);
       letter-spacing: 2px;
       text-shadow: 1px 1px 0 var(--dark);
@@ -128,7 +128,7 @@
 
     .scene-grid {
       display: grid;
-      grid-template-columns: minmax(320px, 1fr) 720px; /* 題目面板固定寬度，intro 面板自動填滿剩餘（變寬） */
+      grid-template-columns: minmax(320px, 1fr) 720px;
       gap: 32px;
       align-items: start;
     }
@@ -142,7 +142,7 @@
       padding: 32px;
       box-shadow: 6px 6px 0 rgba(70, 52, 56, 0.1);
     }
-    /* 彈跳視窗遮罩與內容樣式 */
+
     .reward-modal-overlay {
       position: fixed;
       inset: 0;
@@ -157,20 +157,19 @@
       display: flex;
       animation: fadeIn 0.3s ease-out;
     }
-    /* 彈跳視窗內容樣式調整 */
+
     .reward-modal-content {
       background: #FFF7D7;
       border: 8px solid var(--dark);
       border-radius: 36px;
       padding: 36px;
       text-align: center;
-      width: min(480px, 100%); /* 稍微加寬視窗以容納單行標題 */
+      width: min(480px, 100%);
       box-shadow: 12px 12px 0 var(--gold);
       transform: scale(0.8);
       animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
-    
-    /* 確保標題強制在同一行並自動縮放 */
+
     #reward-title {
       font-size: 1.9rem !important;
       white-space: nowrap;
@@ -213,7 +212,7 @@
 
     .concept-chip {
       display: grid;
-      grid-template-columns: 140px 1fr; /* 固定左側標題寬度為 140px，右側說明自動填滿，確保上下完全對齊 */
+      grid-template-columns: 140px 1fr;
       align-items: center;
       gap: 12px;
       border: 2px solid #E5E7EB;
@@ -235,13 +234,13 @@
       padding-bottom: 16px;
       border-bottom: 2px dashed #E5E7EB;
     }
-    
+
     .step-progress {
       display: flex;
       gap: 8px;
       align-items: center;
     }
-    
+
     .step-dot {
       width: 16px;
       height: 16px;
@@ -375,26 +374,25 @@
       transform: scale(1.05) translateY(-8px);
     }
 
-    /* 節點以畫框「中心」為基準對稱定位，距離縮短、置中，不影響畫框本身大小 */
     .level1-board .checkpoint-line { height: 8px; top: 50%; left: calc(50% - 75px); right: calc(50% - 75px); transform: translateY(-50%); }
     .level1-board .node-left { top: 50%; left: 50%; right: auto; transform: translate(calc(-50% - 145px), -50%); }
     .level1-board .node-right { top: 50%; left: 50%; right: auto; transform: translate(calc(-50% + 145px), -50%); }
     .level1-board .slot-left { top: 58%; left: calc(50% - 150px); }
     .level1-board .slot-right { top: 58%; left: calc(50% + 140px); }
-   
-    /* 調整 Checkpoint 2 的外層容器間距，使其與 Checkpoint 1 的題目與框框距離完全一致 */
+
     .cp2-lab {
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 20px;
+      gap: 2px;
+      padding-left: 15px;
       margin-top: 0px;
       margin-bottom: 0px;
     }
     .cp2-board.cp2-board-custom .path-controls {
       position: absolute;
-      bottom: 20px; /* 貼近畫框底部 */
+      bottom: 20px;
       left: 24px;
       right: 24px;
       display: grid;
@@ -402,16 +400,16 @@
       gap: 10px;
       z-index: 40;
     }
-    /* 水平／垂直／重設按鈕改放在畫框左側（比照 Final Challenge 的 bit 選擇按鈕） */
+
     .cp2-side-buttons {
       display: flex;
       flex-direction: column;
-      gap: 20px; /* 稍微加大按鈕之間的間距 */
-      width: 100px; /* 按鈕寬度稍微拉寬，配合放大的圖示 */
+      gap: 20px;
+      width: 100px;
       flex-shrink: 0;
       align-items: center;
-      justify-content: center; /* 讓三個按鈕在高度上均勻分佈 */
-      height: 400px; /* 強制與右側 cp2-board 最小高度一致 */
+      justify-content: center;
+      height: 400px;
     }
     .path-btn, .multi-toggle-btn {
       min-height: 40px !important;
@@ -450,9 +448,7 @@
       min-height: 320px;
       margin-bottom: 0;
     }
-    
-    
-    /* Checkpoint 2 專屬：拉寬正方形尺寸，並將上方節點位置整體往上移以預留下方按鈕空間 */
+
     .cp2-board.cp2-board-custom {
       min-height: 350px !important;
       width: 450px !important;
@@ -460,33 +456,29 @@
       margin: 0 auto 24px auto;
       position: relative;
     }
-    
-    /* 獨立放大 Checkpoint 2 的 Node 尺寸（不影響其他 Checkpoint） */
+
     .cp2-board.cp2-board-custom .checkpoint-node {
       width: 110px !important;
       height: 110px !important;
     }
     .cp2-board.cp2-board-custom .checkpoint-node img {
-      width: 90px !important; /* 縮小圖案比例 */
-      transform: none !important; /* 移除偏移，讓圖案在節點內置中 */
+      width: 90px !important;
+      transform: none !important;
     }
 
-    /* 調整內部節點拉開距離（位置擴大到外框邊緣） */
     .cp2-board.cp2-board-custom .cp2-node-0 { top: 25px !important; left: 60px !important; }
     .cp2-board.cp2-board-custom .cp2-node-1 { top: 25px !important; right: 60px !important; left: auto !important; }
     .cp2-board.cp2-board-custom .cp2-node-2 { bottom: 25px !important; left: 60px !important; top: auto !important; }
     .cp2-board.cp2-board-custom .cp2-node-3 { bottom: 25px !important; right: 60px !important; left: auto !important; top: auto !important; }
 
-    /* 調整魚的位置跟著節點距離擴開 */
     .cp2-board.cp2-board-custom .cp2-slot-0 { top: 95px !important; left: 115px !important; }
     .cp2-board.cp2-board-custom .cp2-slot-1 { top: 95px !important; left: calc(100% - 115px) !important; }
     .cp2-board.cp2-board-custom .cp2-slot-2 { top: calc(100% - 60px) !important; left: 115px !important; }
     .cp2-board.cp2-board-custom .cp2-slot-3 { top: calc(100% - 60px) !important; left: calc(100% - 115px) !important; }
 
-    /* 調整內部連線長度以對齊拉開後的節點 */
     .cp2-board.cp2-board-custom #cp2-line-h-0 { top: 78px !important; left: 145px !important; right: 145px !important; width: auto !important; }
     .cp2-board.cp2-board-custom #cp2-line-h-1 { bottom: 78px !important; left: 145px !important; right: 145px !important; width: auto !important; top: auto !important; }
-    
+
     .cp2-board.cp2-board-custom #cp2-line-v-0 { left: 108px !important; top: 85px !important; bottom: 105px !important; height: auto !important; }
     .cp2-board.cp2-board-custom #cp2-line-v-1 { right: 108px !important; left: auto !important; top: 85px !important; bottom: 105px !important; height: auto !important; }
 
@@ -502,7 +494,7 @@
     .cp2-board .fixed-number {
       position: absolute;
       bottom: 0px;
-      right: 40px; /* 數值從原本的 31px 調大，標籤就會往左移 */
+      right: 40px;
       font-size: 16px;
       font-weight: 900;
       color: var(--dark);
@@ -537,7 +529,6 @@
     #cp2-line-v-0 { left: 110px; }
     #cp2-line-v-1 { right: 110px; }
 
-    /* CP2 Mode buttons restyled to look like Level 2's X0 / X1 gate buttons (visual only) */
     .gate-btn-v2 {
       position: relative;
       display: flex;
@@ -559,24 +550,36 @@
       transform: translateY(-2px) scale(1.03);
       border-color: #463438;
     }
-    /* Mini square icon (same visual language as Level 3's getMiniSquareSVG) used inside cp2 mode buttons */
+
     .hyper-line { stroke: #463438; stroke-width: 2; opacity: 0.3; }
     .hyper-line-hi { stroke: #FFB7C5; stroke-width: 4.5; opacity: 1; transition: stroke 0.2s; }
     .gate-btn-v2 .hyper-line-hi { stroke: #f78790; }
     .gate-btn-v2:hover .hyper-line-hi { stroke: #ffffff !important; }
-    .cp2-side-buttons .gate-btn-v2 {
-      height: 80px;
-      width: 100%;
-      min-height: 80px;
+
+    .cp2-side-buttons .path-btn.cp2-mode-btn {
+      height: 76px;
+      width: 72px;
+      min-height: 76px;
+      padding: 0;
+      border-radius: 8px;
+    }
+    .cp2-side-buttons .path-btn.cp2-mode-btn svg {
+      width: 36px;
+      height: 36px;
     }
 
-    /* 4. 放大 Reset 按鈕（使三個按鈕總高度精準對齊右側 400px） */
+    .cp2-side-buttons .path-btn.cp2-mode-btn:hover {
+      background-color: #FFB7C5 !important;
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
     .cp2-side-buttons .path-btn {
       height: 50px;
       width: 100%;
       min-height: 100px;
       font-size: 0.95rem !important;
-      
+
     }
 
     .cp2-side-buttons .func-btn.btn-reset { width: 100%; min-width: 0; min-height: 44px; height: 44px; margin: 0; padding: 0 6px; font-size: 13px; border-radius: 10px; box-shadow: 0 3px 0 var(--dark); }
@@ -584,7 +587,6 @@
     .func-btn.btn-reset { background: #FFF9F0; color: var(--dark); }
     .func-btn.btn-reset:hover { background-color: #FFB7C5 !important; color: #fff !important; }
 
-    /* CP4 bit-select viewer */
     .cp4-bit-viewer { display: flex; align-items: stretch; gap: 16px; margin-bottom: 20px; }
     .cp4-bit-buttons { display: flex; flex-direction: column; gap: 10px; width: 96px; flex-shrink: 0; align-self: stretch; }
     .cp4-bit-btn { flex: 1; border: 3px solid var(--dark); border-radius: 14px; padding: 12px 4px; font-weight: 900; font-size: 0.85rem; background: white; cursor: pointer; box-shadow: 0 3px 0 var(--dark); transition: all 0.15s; }
@@ -594,7 +596,6 @@
     .cp4-bit-line { position: absolute; height: 3px; background: var(--dark); opacity: 0.35; transform-origin: 0 50%; border-radius: 999px; z-index: 1; }
     .cp4-bit-line.dashed { height: 0; background: transparent; border-top: 3px dashed var(--dark); opacity: 0.45; }
 
-    /* CP4 results panel (revealed after all Part 1 questions are answered) */
     .cp4-results { display: none; margin: 10px 0 26px; padding: 20px 22px; border: 3px dashed var(--dark); border-radius: 18px; background: #FBFBFF; }
     .cp4-results.show { display: block; animation: fadeInRight 0.4s ease; }
     .cp4-score-banner { font-weight: 900; font-size: 1.15rem; margin-bottom: 14px; padding: 10px 16px; border-radius: 12px; background: #FFF7D7; }
@@ -605,7 +606,6 @@
     .cp4-result-num { font-weight: 900; min-width: 34px; }
     .cp4-result-row.wrong { color: #b23b3b; }
 
-    /* CP3 phased teaching animation (3-bit -> 4-bit expansion) */
     .cp3-anim-el { opacity: 0; transition: opacity 0.6s ease; }
     .cp3-anim-el.visible { opacity: 1; }
     .cp3-anim-caption { position: absolute; left: 16px; bottom: 12px; z-index: 30; background: rgba(255,255,255,0.92); border: 2px solid var(--dark); border-radius: 999px; padding: 6px 16px; font-weight: 900; font-size: 0.85rem; color: var(--dark); }
@@ -667,8 +667,6 @@
       background: transparent;
       border-top: 4px dashed var(--dark);
     }
-    /* 連線不需要依方向上色，統一使用中性色（無色彩區分） */
-    /* 透明度只在 .visible 被加上後才套用，避免蓋掉 .cp3-anim-el 的隱藏狀態，導致連線一開始就全部顯示 */
     .cp3-anim-el.cp3-line.visible { opacity: 0.9; }
     .cp3-anim-el.cp3-line.dashed.visible { opacity: 0.45; }
     .cp3-mini-node {
@@ -777,7 +775,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 0; 
+      gap: 0;
       padding: 40px 20px;
     }
 
@@ -809,7 +807,7 @@
       height: 50px;
       position: absolute;
       top: 50%;
-      left: calc(50% - 105px); 
+      left: calc(50% - 105px);
       transform: translate(-50%, -50%);
       transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       z-index: 5;
@@ -1057,10 +1055,10 @@
       --cn-cream: #FBF8F0;
       text-align: center;
       display: none;
+      line-height: 1.3;
     }
     .certificate.show { display: block; animation: slideUp 0.5s ease; }
 
-    /* Landscape certificate: photo column on the left, main content on the right */
     .certificate-box {
       position: relative;
       border: 2px solid var(--cn-gold);
@@ -1077,7 +1075,6 @@
       text-align: left;
       font-family: 'Cormorant Garamond', serif;
     }
-    /* thin inner rule to give the classic double-border certificate look */
     .certificate-box::before {
       content: '';
       position: absolute;
@@ -1099,8 +1096,6 @@
     .certificate-corner.bl { bottom: 22px; left: 22px; border-right: none; border-top: none; }
     .certificate-corner.br { bottom: 22px; right: 22px; border-left: none; border-top: none; }
 
-    /* Right column: keeps every inner block (title, score, list, signature) centered
-       on the SAME axis as this column, not on the certificate-box or page width. */
     .certificate-main-col {
       display: flex;
       flex-direction: column;
@@ -1108,7 +1103,6 @@
       width: 100%;
     }
 
-    /* Left column: photo + name */
     .certificate-photo-col {
       display: flex;
       flex-direction: column;
@@ -1142,13 +1136,11 @@
       overflow: hidden !important;
     }
 
-    /* 內層圖片強制設定絕對尺寸，確保 html2canvas 截圖時不變形 */
     .certificate-photo img {
       position: absolute !important;
-      top: 0 !important;
-      left: 0 !important;
-      width: 132px !important;
-      height: 132px !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
       max-width: none !important;
       max-height: none !important;
       border-radius: 50% !important;
@@ -1170,9 +1162,11 @@
     }
 
     .certificate-seal {
+      display: block;
       width: 54px;
       height: 54px;
       margin: 0 auto 10px;
+      flex-shrink: 0;
     }
 
     .certificate-eyebrow {
@@ -1209,7 +1203,8 @@
       height: 2px;
       background: var(--cn-gold);
       margin: 0 auto 18px;
-      border-radius: 999px;
+      border-radius: 1px;
+      flex-shrink: 0;
     }
 
     .certificate-presented-to {
@@ -1239,52 +1234,51 @@
     }
 
     .certificate-list {
-      display: grid;
-      gap: 14px;
+      display: block;
       max-width: 600px;
       width: 100%;
       margin: 0 auto 22px;
       text-align: left;
-      font-size: 1.15rem;
-      font-weight: 600;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
       color: var(--cn-navy);
       background: white;
       padding: 22px 30px;
       border-radius: 10px;
       border: 1px solid var(--cn-gold-soft);
+      box-sizing: border-box;
     }
-    
-    .certificate-list div { display: flex; align-items: center; gap: 12px; }
+
+    .certificate-list div { display: flex; align-items: center; height: 32px; margin-bottom: 14px; }
+    .certificate-list div:last-child { margin-bottom: 0; }
     .certificate-list div::before {
       content: '\2726';
       color: var(--cn-gold);
       font-size: 1.2rem;
       font-family: Arial, Helvetica, sans-serif;
+      margin-right: 12px;
+      line-height: normal;
     }
 
-    /* 網頁上的分數欄位樣式 */
     .certificate-score {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      height: 44px;
-      font-family: 'Playfair Display', serif;
+      height: 46px;
+      padding: 0 28px;
+      font-family: Georgia, 'Times New Roman', serif;
       font-weight: 700;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
+      line-height: normal;
       color: var(--cn-navy);
       background: var(--cn-gold-soft);
       border: 1px solid var(--cn-gold);
       border-radius: 999px;
-      padding: 0 28px;
       margin: 0 auto 22px;
-      line-height: 1;
-      transform: translateY(-2px); /* 網頁顯示保持不變 */
-    }
-
-    /* 下載圖片時專用的分數欄位樣式：在這裡加入往上偏移量 */
-    .certificate-score.for-download {
-      transform: translateY(-9px) !important; /* 數值越大代表截圖時文字會越往上移，請依據下載結果微調 */
-      margin-top: 2px !important;
+      box-sizing: border-box;
+      text-align: center;
+      white-space: nowrap;
     }
     .certificate-footer {
       display: flex;
@@ -1326,26 +1320,26 @@
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 20px;
+      gap: 4px;
+      padding-left: 6px;
       margin-top: 0px;
       margin-bottom: 0px;
     }
 
-    /* 2. 設定左側按鈕欄的上下間距與總高度，使其完美匹配右側 400px 的 Node 框高度 */
      .cp2-side-buttons {
        display: flex;
        flex-direction: column;
        gap: 20px;
-       width: 100px; /* 寬度稍微拉寬以容納放大的圖示 */
+       width: 100px;
        flex-shrink: 0;
        align-items: center;
        justify-content: center;
-       height: 400px; /* 強制與右側 cp2-board 最小高度一致 */
+       height: 400px;
      }
       .line-question-row { grid-template-columns: 1fr; }
       .actions { flex-direction: column; }
     }
-    /* 讓 NEXT 按鈕長得跟選項（.answer-btn）一樣，但寬度撐滿 */
+
     .step-next-btn {
       width: 100%;
       min-height: 64px;
@@ -1391,23 +1385,20 @@
             <p id="intro-copy"></p>
             <div id="concept-path" class="concept-path"></div>
           </aside>
-          
+
           <section id="question-area" class="question-panel">
           </section>
         </div>
-        
-      <!-- 獎勵彈跳視窗 -->
+
       <div id="reward-modal" class="reward-modal-overlay">
         <div class="reward-modal-content">
           <div class="reward-star">★</div>
            <h2 id="reward-title"></h2>
           <p id="reward-copy" style="font-size: 1.1rem; margin: 0 0 24px; color: #4B5563; font-weight: bold;"></p>
-      
-      <!-- 排版對齊 Level 1 的按鈕結構 -->
-          
+
           <div style="display: flex; flex-direction: column; gap: 14px; align-items: center; justify-content: center; width: 100%;">
             <button onclick="location.href='index.html'" class="game-btn btn-blue" style="width: 100%; border-radius: 60px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; font-size: 22px; padding: 12px;">HOME</button>
-        
+
             <div style="display: flex; gap: 14px; align-items: center; justify-content: center; width: 100%;">
               <button onclick="location.reload()" class="game-btn btn-green" style="width: 78px; height: 78px; min-width: 78px; border-radius: 50%; padding: 0; display: inline-flex; align-items: center; justify-content: center; margin: 0; box-sizing: border-box;" aria-label="Play again" title="Play again">
                   <svg viewBox="0 0 24 24" aria-hidden="true" fill="#fff" style="width: 38px; height: 38px; filter: drop-shadow(2px 2px 0 #463438);">
@@ -1446,11 +1437,7 @@
             <div id="certificate-name" class="certificate-name">Explorer</div>
           </div>
           <div class="certificate-main-col">
-            <svg class="certificate-seal" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="32" cy="32" r="26" fill="none" stroke="#B8933C" stroke-width="2"/>
-              <circle cx="32" cy="32" r="20" fill="none" stroke="#B8933C" stroke-width="1"/>
-              <path d="M32 16l3.9 8.2 9 1.1-6.6 6.2 1.7 8.9L32 36l-7.9 4.4 1.6-8.9-6.5-6.2 9-1.1z" fill="#B8933C"/>
-            </svg>
+            <img id="certificate-seal" class="certificate-seal" width="54" height="54" alt="" aria-hidden="true">
             <div class="certificate-eyebrow">Meowtopia &middot; Certificate of Achievement</div>
             <h2>Quantum Explorer Certificate</h2>
             <p class="certificate-subtitle">Awarded for completing the Quantum Explorer learning journey</p>
@@ -1479,14 +1466,14 @@
     const CHECKPOINT_SCRIPT_URL = '';
     const SKIN_STORAGE_KEY = 'meowtopiaSkin';
     const STAR_KEYS = ['cp1', 'cp2', 'cp3', 'cp4'];
-    const METER_STAR_KEYS = ['cp1', 'cp2', 'cp3']; // cp4 is the Final Challenge crown, not counted as a star
+    const METER_STAR_KEYS = ['cp1', 'cp2', 'cp3'];
     const STAR_NAMES = {
       cp1: 'State Explorer Star',
       cp2: 'Geometry Explorer Star',
       cp3: 'World Explorer Star',
       cp4: 'Quantum Explorer Certificate'
     };
-    
+
     const CHECKPOINTS = {
       cp1: {
         title: 'Checkpoint 1', star: STAR_NAMES.cp1, next: 'level2.html',
@@ -1503,7 +1490,7 @@
         stepsCount: 3
       },
       cp3: {
-        title: 'Checkpoint 3', star: STAR_NAMES.cp3, next: 'level18.html', // 導向通關 Level 18 解鎖 CP4
+        title: 'Checkpoint 3', star: STAR_NAMES.cp3, next: 'level18.html',
         introTitle: 'World Explorer',
         intro: '🎉 Great job!\nYou explored the 4-feature puzzles.\nNow let\'s slow down and think about how this world grows.\nAs more features are added, the puzzle becomes larger, but the same rules still work.\nThere are also many ways to solve the same puzzle.\nThese questions will help you discover how larger worlds are built and how to find better solutions.',
         concepts: [['New Feature', 'A feature that creates more possible states'], ['Larger World', 'A world created by adding more features'], ['Efficient Solution', 'Reaching the same target using fewer moves'], ['Optimization', 'Finding a better solution to the same puzzle']],
@@ -1564,7 +1551,6 @@
       if (skin === 'mj') return `./mj/dif${imageIndex}.png`;
       return `./svg/dif${imageIndex}.png`;
     }
-    // Checkpoint 1's questions never change with the selected skin, so they always use the default svg dif image.
     function defaultFeatureSrc(index) {
       const imageIndex = featureImageIndex(index);
       return `./svg/dif${imageIndex}.png`;
@@ -1586,8 +1572,6 @@
       if (skin === 'mj') return `./mj/Fish${index}.png`;
       return defaultFishSrc(index, bits);
     }
-    // 支援 1~4 bit 的 skin-aware 圖片來源。預設 svg 素材只有 3-bit(000-111)，
-    // 4-bit 時沿用既有規則：重複使用 3-bit 素材（index mod 8），並用灰階標示「後半 8 個 node」。
     function bitCatSrc(index, bits) {
       const skin = currentSkin();
       if (skin !== 'default') return catSrc(bits >= 4 ? (index % 16) : index, bits);
@@ -1602,7 +1586,6 @@
     }
     function isFarCopy(index, bits) { return bits >= 4 && index >= 8; }
 
-    // Step navigation
     function renderStepHeader(totalSteps) {
       let dots = Array.from({length: totalSteps}).map((_, i) => `
         <button class="step-dot" id="dot-${i+1}" type="button" onclick="goToStep(${i + 1})" aria-label="Question ${i + 1}"></button>
@@ -1656,13 +1639,12 @@
       if (state.currentStep < state.totalSteps) {
         state.currentStep++;
         updateStepUI();
-        
-        // 切換到下一題時，自動重置該題互動盤的魚與節點位置
+
         if (state.checkpointId === 'cp1' && cp1StepStates[state.currentStep]) {
           cp1StepStates[state.currentStep] = { fishAtNode: [0, 1], toggleClicks: 0 };
           updateCP1StepDemoUI(state.currentStep);
         }
-        
+
         setTimeout(() => {
           const questionArea = document.getElementById('question-area') || document.getElementById('checkpoint-shell');
           if (questionArea) {
@@ -1682,7 +1664,6 @@
     function selectAnswer(questionId, value) {
       const isFinalTest = state.checkpointId === 'cp4';
       const resultsRevealed = document.getElementById('cp4-results')?.classList.contains('show');
-      // 最終測驗還沒公布正解前，允許使用者改變答案；其他關卡答完立即顯示正解，維持原本鎖定行為
       if (hasAnswer(questionId) && !(isFinalTest && !resultsRevealed)) return;
       state.answers[questionId] = value;
       document.querySelectorAll(`[data-question="${questionId}"]`).forEach(btn => {
@@ -1716,7 +1697,6 @@
     function hasAnswer(key) { return state.answers[key] !== undefined && state.answers[key] !== ''; }
 
     function checkFinalCompletion() {
-      // 最終挑戰：Part 1（10題）與 Part 2（4題心得）都答完後，才一次批卷、顯示逐題對錯、解說與總分
       if (state.checkpointId === 'cp4' && typeof CP4_ALL_KEYS !== 'undefined' && CP4_ALL_KEYS.every(hasAnswer)) {
         const panel = document.getElementById('cp4-results');
         if (panel && !panel.classList.contains('show')) revealCP4Results();
@@ -1725,7 +1705,7 @@
       if (!btn) return;
       const missing = missingRequired();
       const wrong = unresolvedMistakes();
-      
+
       if (missing.length === 0) {
         btn.disabled = false;
         if (wrong.length > 0) {
@@ -1734,7 +1714,7 @@
             btn.onclick = retakeFinalTest;
           } else {
             btn.innerText = 'RETRY MISSED';
-            btn.onclick = startMistakeRetry; // 支援多輪循環答錯再複習
+            btn.onclick = startMistakeRetry;
           }
         } else {
           btn.innerText = 'CLAIM STAR';
@@ -1751,7 +1731,6 @@
     function showQuestionFeedback(questionId, value) {
       const expected = expectedAnswers(state.checkpointId) || {};
       const isScored = Object.prototype.hasOwnProperty.call(expected, questionId);
-      // CP4 Part 1 (cp4_q1~10): 不即時公布對錯，答完全部 10 題後才一次顯示結果
       const deferReveal = state.checkpointId === 'cp4' && CP4_PART1_KEYS.includes(questionId);
 
       if (isScored) {
@@ -1767,7 +1746,6 @@
           if (feedback) {
             const meta = QUESTION_META[questionId] || {};
             feedback.className = `feedback show ${isCorrect ? 'correct' : 'wrong'}`;
-            // 刪除 The correct answer is... 提示，答錯時只顯示錯誤提示文字
             if (isCorrect) {
               feedback.innerHTML = `Correct.<br>${meta.explanation || ''}`;
             } else {
@@ -1777,7 +1755,6 @@
         }
       }
 
-      // Next 按鈕：不論該題是否計分（例如 CP4 Part 2 的心得題）都要顯示，讓使用者可以往下一步
       if (isStepAnswered(state.currentStep) && state.currentStep < state.totalSteps) {
         const activeBlock = document.querySelector(`.question-block[data-step="${state.currentStep}"]`);
         if (activeBlock) {
@@ -1793,8 +1770,6 @@
           nextContainer.innerHTML = `<button onclick="nextStep()" class="step-next-btn">NEXT ➜</button>`;
         }
       }
-
-
 
       setTimeout(() => {
         const actionsArea = document.querySelector('.actions') || document.getElementById('complete-btn');
@@ -1814,11 +1789,9 @@
       const expected = expectedAnswers(state.checkpointId) || {};
 
       if (state.checkpointId === 'cp4') {
-        // Part 1 + Part 2 尚未全部作答完成前，不判定分數（避免結果面板尚未出現就被要求重考）
         if (!CP4_ALL_KEYS.every(hasAnswer)) return [];
         const wrongKeys = CP4_PART1_KEYS.filter(key => String(state.answers[key]) !== String(expected[key]));
         const correctCount = CP4_PART1_KEYS.length - wrongKeys.length;
-        // 未達 90 分（10 題錯 2 題以上）時，回傳實際答錯的題目，供 RETRY MISSED 清除重答
         return correctCount < 9 ? wrongKeys : [];
       }
 
@@ -1841,7 +1814,6 @@
         feedback.className = 'feedback';
         feedback.innerHTML = '';
       }
-      // Remove any generated next buttons in the step block
       const step = QUESTION_STEPS[questionId];
       if (step) {
         const block = document.querySelector(`.question-block[data-step="${step}"]`);
@@ -1852,7 +1824,6 @@
       }
     }
 
-    // Final Challenge：沒通過時讓使用者自己選擇要不要重新測驗一次（整份重測，而非只重測答錯的題目）
     function retakeFinalTest() {
       const panel = document.getElementById('cp4-results');
       if (panel) panel.classList.remove('show');
@@ -1874,7 +1845,6 @@
         if (panel) panel.classList.remove('show');
       }
 
-      // 只要按一次 RETRY MISSED，把所有答錯的題目與對應的互動盤節點全部一次重置
       wrong.forEach(questionId => {
         clearAnswerForRetry(questionId);
         const step = QUESTION_STEPS[questionId];
@@ -1884,13 +1854,12 @@
         }
       });
 
-      // 自動跳轉到第一道錯題所在的步驟
       const first = wrong[0];
       const targetStep = QUESTION_STEPS[first] || 1;
       state.currentStep = targetStep;
 
       updateStepUI();
-           
+
       setTimeout(() => {
         const questionArea = document.getElementById('question-area') || document.getElementById('checkpoint-shell');
         if (questionArea) {
@@ -1925,7 +1894,6 @@
       `).join('');
       state.totalSteps = cp.stepsCount;
     }
-    // 讓 Checkpoint 1 的每一題各自獨立儲存魚與節點的位置
     let cp1StepStates = {
       1: { fishAtNode: [0, 1], toggleClicks: 0 },
       2: { fishAtNode: [0, 1], toggleClicks: 0 },
@@ -2009,8 +1977,6 @@
       updateStepUI();
     }
 
-   // Mini square icon for the cp2 mode buttons, same visual language as Level 3's getMiniSquareSVG:
-   // a 4-node square with two highlighted parallel lines (horizontal pair or vertical pair).
    function getCP2ModeSVG(type) {
       const miniNodes = [
         { x: 20, y: 20 },
@@ -2018,7 +1984,6 @@
         { x: 20, y: 80 },
         { x: 80, y: 80 }
       ];
-      // edges: 0-1 & 2-3 are horizontal; 0-2 & 1-3 are vertical
       const edges = [
         { p: [0, 1], axis: 'horizontal' },
         { p: [2, 3], axis: 'horizontal' },
@@ -2037,18 +2002,16 @@
       svg += `</svg>`;
       return svg;
     }
-    
+
     function cp2Board() {
       return `
         <div class="cp2-lab">
-          <!-- 按鈕部分放在框外面的左邊，從上到下直向排列 -->
           <div class="cp2-side-buttons">
-            <button class="gate-btn-v2 btn-not" onclick="applyCP2Move('horizontal')" onmouseover="highlightCP2Lines('horizontal', true)" onmouseout="highlightCP2Lines('horizontal', false)" title="Mode Horizontal" aria-label="Mode Horizontal">${getCP2ModeSVG('horizontal')}</button>
-            <button class="gate-btn-v2 btn-not" onclick="applyCP2Move('vertical')" onmouseover="highlightCP2Lines('vertical', true)" onmouseout="highlightCP2Lines('vertical', false)" title="Mode Vertical" aria-label="Mode Vertical">${getCP2ModeSVG('vertical')}</button>
+            <button class="path-btn cp2-mode-btn gate-btn-v2 btn-not" onclick="applyCP2Move('horizontal')" onmouseover="highlightCP2Lines('horizontal', true)" onmouseout="highlightCP2Lines('horizontal', false)" title="Mode Horizontal" aria-label="Mode Horizontal">${getCP2ModeSVG('horizontal')}</button>
+            <button class="path-btn cp2-mode-btn gate-btn-v2 btn-not" onclick="applyCP2Move('vertical')" onmouseover="highlightCP2Lines('vertical', true)" onmouseout="highlightCP2Lines('vertical', false)" title="Mode Vertical" aria-label="Mode Vertical">${getCP2ModeSVG('vertical')}</button>
             <button class="path-btn" onclick="resetCP2Demo()">Reset</button>
           </div>
-          
-          <!-- Node 畫框完整保留原有尺寸，並因為水平並排而整體往右推開 -->
+
           <div class="checkpoint-board cp2-board cp2-board-custom">
             <div id="cp2-line-h-0" class="checkpoint-line cp2-line-h"></div>
             <div id="cp2-line-h-1" class="checkpoint-line cp2-line-h"></div>
@@ -2068,7 +2031,7 @@
         </div>
       `;
     }
-    
+
     function swapCP2Pairs(pairs) {
       state.cp2FishAtNode = state.cp2FishAtNode.map(node => {
         for (const [a, b] of pairs) {
@@ -2185,7 +2148,6 @@
         return { x: x * scale + offsetX, y: y * scale + offsetY };
       };
       const lineClass = ['horizontal', 'vertical', 'diagonal', 'dashed'];
-      // Phase 1: 前面 8 個 node (3-bit) 及其連線；Phase 2: 後面 8 個 node (擴展的第 4 個 bit) 及其連線；Phase 3: 連接前後兩組的虛線
       let html = '<div class="visual-board cp3-board" id="cp3-anim-board"><div class="cp3-graph-inner" id="cp3-graph-inner">';
       for (let i = 0; i < 16; i++) {
         for (let edgeType = 0; edgeType < 4; edgeType++) {
@@ -2215,8 +2177,6 @@
       return html;
     }
 
-    // Recenters the cp3 4-bit graph inside its board based on the board's real (dynamic) width,
-    // instead of relying on the fixed offsets baked into getPos().
     function centerCP3Graph() {
       const board = document.getElementById('cp3-anim-board');
       const inner = document.getElementById('cp3-graph-inner');
@@ -2324,7 +2284,6 @@
       document.getElementById('question-area').innerHTML = `
         ${renderStepHeader(14)}
 
-        <!-- 最終挑戰的圖固定顯示在所有題目上方，不隨題目切換而消失 -->
         <div class="cp4-bit-viewer">
           <div class="cp4-bit-buttons">
             <button class="cp4-bit-btn active" data-bits="1" onclick="showCP4Bits(1)">1-bit</button>
@@ -2425,8 +2384,7 @@
             {label:'D. A random challenge', value:'3'}
           ])}
         </div>
-        
-        <!-- Part 2: Reflection 步驟 -->
+
         <div class="question-block" data-step="11">
           <h3>Part 2: Player Reflection (1/4)</h3>
           <p style="margin-bottom: 8px; font-weight: bold;">Before playing this game, how familiar were you with quantum computing?</p>
@@ -2470,7 +2428,6 @@
       if (CP4_ALL_KEYS.every(hasAnswer)) revealCP4Results();
     }
 
-    // ---- CP4 bit-select viewer (Item 6) ----
     function bitStagePositions(bits) {
       const count = Math.pow(2, bits);
       const pts = [];
@@ -2490,9 +2447,6 @@
       const xs = pts.map(p => p.x), ys = pts.map(p => p.y);
       const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
       const stageW = stage.clientWidth || 380, stageH = stage.clientHeight || 260, pad = 46;
-      // Track the *actual* extents separately from the padded fallback used for scaling,
-      // so an axis with zero real spread (e.g. 1-bit, which only varies left-right) can be
-      // centered exactly instead of anchored near the top.
       const rawSpanX = maxX - minX, rawSpanY = maxY - minY;
       const spanX = rawSpanX || 1, spanY = rawSpanY || 1;
       const scale = Math.min((stageW - pad * 2) / spanX, (stageH - pad * 2) / spanY);
@@ -2506,9 +2460,6 @@
       const posByIndex = {};
       pts.forEach(p => { posByIndex[p.i] = toPx(p); });
 
-      // Draw hypercube edges: connect every pair of states that differ by exactly one bit.
-      // The 4th-bit edges (the ones linking the front 8 states to the back 8 states) are
-      // drawn as dashed lines to visually separate the two copies of the world.
       let linesHtml = '';
       pts.forEach(p => {
         for (let b = 0; b < bits; b++) {
@@ -2539,10 +2490,8 @@
       renderCP4BitStage(bits);
     }
 
-    // ---- CP4 deferred feedback + results (Item 4) ----
     const CP4_PART1_KEYS = ['cp4_q1', 'cp4_q2', 'cp4_q3', 'cp4_q4', 'cp4_q5', 'cp4_q6', 'cp4_q7', 'cp4_q8', 'cp4_q9', 'cp4_q10'];
     const CP4_PART2_KEYS = ['cp4_ref1', 'cp4_ref2', 'cp4_ref3', 'cp4_ref4'];
-    // 只有 Part 1 + Part 2 全部完成才批卷（顯示成績／解鎖判定）
     const CP4_ALL_KEYS = CP4_PART1_KEYS.concat(CP4_PART2_KEYS);
 
     function revealCP4Results() {
@@ -2610,11 +2559,9 @@
 
       const cp = CHECKPOINTS[state.checkpointId];
       const stars = readStars();
-      
-      // 防呆機制：檢查這顆星星是否已經拿過了
+
       const alreadyCollected = stars[state.checkpointId];
 
-      // 只有在還沒拿過的情況下才將該星星設為 true
       stars[state.checkpointId] = true;
       writeStars(stars);
 
@@ -2625,14 +2572,12 @@
       sessionStorage.setItem('meow_level', String(Math.min(upLvl, 18)));
       updateStarMeter();
 
-      // 防呆提示：如果是重複過關，可以微調提示文字讓玩家知道已經通關過了（選填）
       if (alreadyCollected) {
         document.getElementById('reward-copy').innerText = 'You already collected this star, but great job reviewing!';
       } else {
         document.getElementById('reward-copy').innerText = 'You successfully converted your discoveries into learning progress!';
       }
 
-      // 播放 meow 音檔
       try {
         meowAudio.currentTime = 0;
         meowAudio.play().catch(() => {});
@@ -2712,7 +2657,6 @@
       cp4_q9: { label: 'B. Player B', explanation: 'Great! Both solutions reach the same goal. The solution with fewer moves uses fewer operations.', wrong: 'Compare the two solutions carefully. Think about what is different between them.' },
       cp4_q10: { label: 'B. A circuit problem', explanation: 'Congratulations! You discovered the hidden idea of the puzzle world. The game combines states, transformations, reversible operations, and efficient solutions which are important in quantum reversible circuits.', wrong: 'Think about everything you explored in the game. What ideas did you use to solve the puzzles?' }
     };
-    // 宣告 pop 音檔（與 Level 1 位置相同）
     const popAudio = new Audio('pop.m4a');
     const meowAudio = new Audio('meow.m4a');
 
@@ -2721,19 +2665,19 @@
       popAudio.play().catch(() => {});
     }
 
-    // 全域監聽點擊事件，只要點到按鈕、選項、進度點等互動元素就會自動發出 pop 聲音
     document.addEventListener('click', event => {
       if (event.target.closest('button, .answer-btn, .feature-btn, .step-dot, .toggle-edge, .checkpoint-line')) {
         playPop();
       }
     }, true);
 
-    // Fills in the professional certificate: player name, concepts that match this player's
-    // checkpoint titles, the Final Challenge score (when available), and today's date.
     function renderCertificate() {
       const user = getUser();
       const nameEl = document.getElementById('certificate-name');
       if (nameEl) nameEl.innerText = user;
+
+      const sealEl = document.getElementById('certificate-seal');
+      if (sealEl && !sealEl.src) sealEl.src = bakeSealImage(108);
 
       const photoEl = document.getElementById('certificate-photo');
       if (photoEl) {
@@ -2743,9 +2687,14 @@
           const photoY = parseInt(sessionStorage.getItem('playerPhotoY') || localStorage.getItem('playerPhotoY') || '50') || 50;
           const rawScale = parseFloat(sessionStorage.getItem('playerPhotoScale') || localStorage.getItem('playerPhotoScale') || '1');
           const photoScale = isNaN(rawScale) ? 1 : Math.min(2.5, Math.max(1, rawScale));
-          
-          // 完整對齊 index.html 的頭像渲染邏輯
-          photoEl.innerHTML = `<img src="${photo}" alt="Player photo" style="width:132px; height:132px; object-fit:cover; object-position:${photoX}% ${photoY}%; transform-origin:${photoX}% ${photoY}%; transform:scale(${photoScale}); border-radius:50%;">`;
+
+          bakeCoverImage2({ src: photo, posX: photoX, posY: photoY, scale: photoScale, outSize: 264 }).then(baked => {
+            if (baked) {
+              photoEl.innerHTML = `<img src="${baked}" alt="Player photo" style="width:100%; height:100%; border-radius:50%; display:block;">`;
+            } else {
+              photoEl.innerHTML = `<img src="${photo}" alt="Player photo" style="width:100%; height:100%; object-fit:cover; object-position:${photoX}% ${photoY}%; transform-origin:${photoX}% ${photoY}%; transform:scale(${photoScale}); border-radius:50%;">`;
+            }
+          });
         }
       }
 
@@ -2761,8 +2710,7 @@
       if (scoreEl) {
         const score = localStorage.getItem(`meow_cp4_score_${user}`) || sessionStorage.getItem('meow_cp4_score');
         if (score) {
-          scoreEl.style.display = 'inline-flex';
-          scoreEl.classList.remove('for-download'); // 網頁顯示用一般樣式
+          scoreEl.style.display = 'flex';
           scoreEl.innerText = `Final Challenge Score: ${score} / 100`;
         } else {
           scoreEl.style.display = 'none';
@@ -2775,54 +2723,77 @@
       }
     }
 
-    async function downloadCertificate() {
-      const target = document.getElementById('certificate-box');
-      const btn = document.getElementById('certificate-download-btn');
-      const scoreEl = document.getElementById('certificate-score');
-      if (!target || typeof html2canvas === 'undefined') return;
-      const originalText = btn ? btn.innerText : '';
-      if (btn) { btn.innerText = 'SAVING...'; btn.disabled = true; }
+    function bakeSealImage(outSize) {
+      const canvas = document.createElement('canvas');
+      canvas.width = outSize;
+      canvas.height = outSize;
+      const ctx = canvas.getContext('2d');
+      const k = outSize / 64;
+      const gold = '#B8933C';
+      ctx.strokeStyle = gold;
+      ctx.fillStyle = gold;
 
-      // 截圖前：將分數欄位切換為下載專用樣式（取消 translateY 偏下問題）
-      if (scoreEl) scoreEl.classList.add('for-download');
+      ctx.lineWidth = 2 * k;
+      ctx.beginPath();
+      ctx.arc(32 * k, 32 * k, 26 * k, 0, Math.PI * 2);
+      ctx.stroke();
 
-      const rect = target.getBoundingClientRect();
-      const prevStyle = {
-        width: target.style.width,
-        height: target.style.height,
-        maxWidth: target.style.maxWidth
-      };
-      target.style.width = `${Math.round(rect.width)}px`;
-      target.style.height = `${Math.round(rect.height)}px`;
-      target.style.maxWidth = 'none';
+      ctx.lineWidth = 1 * k;
+      ctx.beginPath();
+      ctx.arc(32 * k, 32 * k, 20 * k, 0, Math.PI * 2);
+      ctx.stroke();
 
-      try {
-        if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      const starPoints = [
+        [32, 17], [35.8, 26.7], [46.3, 27.4], [38.2, 34], [40.8, 44.1],
+        [32, 38.5], [23.2, 44.1], [25.8, 34], [17.7, 27.4], [28.2, 26.7]
+      ];
+      ctx.beginPath();
+      starPoints.forEach(([x, y], i) => {
+        const px = x * k, py = y * k;
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      });
+      ctx.closePath();
+      ctx.fill();
 
-        const canvas = await html2canvas(target, {
-          backgroundColor: '#FBF8F0',
-          scale: 2,
-          useCORS: true,
-          width: Math.round(rect.width),
-          height: Math.round(rect.height),
-          windowWidth: Math.round(rect.width),
-          windowHeight: Math.round(rect.height)
-        });
-        const link = document.createElement('a');
-        const user = getUser().replace(/[^a-z0-9-_]+/gi, '_') || 'player';
-        link.download = `${user}-meowtopia-certificate.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      } catch {
-        alert('Download failed. Please try again.');
-      } finally {
-        target.style.width = prevStyle.width;
-        target.style.height = prevStyle.height;
-        target.style.maxWidth = prevStyle.maxWidth;
-        // 截圖完成後：恢復網頁顯示的分數樣式
-        if (scoreEl) scoreEl.classList.remove('for-download');
-        if (btn) { btn.innerText = originalText || 'DOWNLOAD'; btn.disabled = false; }
-      }
+      return canvas.toDataURL('image/png');
+    }
+
+    function bakeCoverImage2({ src, posX, posY, scale, outSize }) {
+      return new Promise(resolve => {
+        if (!src) return resolve(null);
+        const px01 = (posX || 50) / 100;
+        const py01 = (posY || 50) / 100;
+        const s = isNaN(scale) ? 1 : scale;
+        const image = new Image();
+        image.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = outSize;
+            canvas.height = outSize;
+            const ctx = canvas.getContext('2d');
+            const iw = image.naturalWidth, ih = image.naturalHeight;
+            if (!iw || !ih) return resolve(null);
+            const coverScale = Math.max(outSize / iw, outSize / ih);
+            const drawW = iw * coverScale, drawH = ih * coverScale;
+            const dx = (outSize - drawW) * px01;
+            const dy = (outSize - drawH) * py01;
+            const cx = outSize * px01, cy = outSize * py01;
+            const dx2 = cx - (cx - dx) * s;
+            const dy2 = cy - (cy - dy) * s;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(outSize / 2, outSize / 2, outSize / 2, 0, Math.PI * 2);
+            ctx.clip();
+            ctx.drawImage(image, dx2, dy2, drawW * s, drawH * s);
+            ctx.restore();
+            resolve(canvas.toDataURL('image/png'));
+          } catch {
+            resolve(null);
+          }
+        };
+        image.onerror = () => resolve(null);
+        image.src = src;
+      });
     }
 
     async function downloadCertificate() {
@@ -2832,33 +2803,22 @@
       const originalText = btn ? btn.innerText : '';
       if (btn) { btn.innerText = 'SAVING...'; btn.disabled = true; }
 
-      // Freeze the box to its current on-screen pixel size (it's normally sized with
-      // width:min(1280px,96%), a responsive value that html2canvas's offscreen clone
-      // can miscalculate — causing the squashed / shifted download). Locking it to an
-      // explicit width+height before capture guarantees the PNG matches what's shown.
-      const rect = target.getBoundingClientRect();
-      const prevStyle = {
-        width: target.style.width,
-        height: target.style.height,
-        maxWidth: target.style.maxWidth
-      };
-      target.style.width = `${Math.round(rect.width)}px`;
-      target.style.height = `${Math.round(rect.height)}px`;
-      target.style.maxWidth = 'none';
-
       try {
-        // Make sure custom webfonts (and the star-bullet glyph) are fully loaded —
-        // otherwise html2canvas can silently skip characters it hasn't rasterized yet.
         if (document.fonts && document.fonts.ready) await document.fonts.ready;
+        const imgs = Array.from(target.querySelectorAll('img'));
+        await Promise.all(imgs.map(img => img.decode ? img.decode().catch(() => {}) : Promise.resolve()));
+
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const canvas = await html2canvas(target, {
           backgroundColor: '#FBF8F0',
           scale: 2,
           useCORS: true,
-          width: Math.round(rect.width),
-          height: Math.round(rect.height),
-          windowWidth: Math.round(rect.width),
-          windowHeight: Math.round(rect.height)
+          onclone: async (clonedDoc) => {
+            if (clonedDoc.fonts && clonedDoc.fonts.ready) {
+              try { await clonedDoc.fonts.ready; } catch {}
+            }
+          }
         });
         const link = document.createElement('a');
         const user = getUser().replace(/[^a-z0-9-_]+/gi, '_') || 'player';
@@ -2868,9 +2828,6 @@
       } catch {
         alert('Download failed. Please try again.');
       } finally {
-        target.style.width = prevStyle.width;
-        target.style.height = prevStyle.height;
-        target.style.maxWidth = prevStyle.maxWidth;
         if (btn) { btn.innerText = originalText || 'DOWNLOAD'; btn.disabled = false; }
       }
     }
