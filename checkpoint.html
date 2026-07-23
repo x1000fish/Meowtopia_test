@@ -2818,6 +2818,17 @@
             if (clonedDoc.fonts && clonedDoc.fonts.ready) {
               try { await clonedDoc.fonts.ready; } catch {}
             }
+            
+            // --- 新增的修正程式碼開始 ---
+            const clonedScore = clonedDoc.getElementById('certificate-score');
+            if (clonedScore) {
+              // 1. 取消自動垂直置中，強制讓文字先貼齊頂部
+              clonedScore.style.alignItems = 'flex-start';
+              // 2. 透過給予明確的上方內距，手動把文字推到正中間
+              // (總高度 46px，字體大約 20px。設定 9px ~ 11px 通常是視覺最準的位置)
+              clonedScore.style.paddingTop = '-10px'; 
+            }
+            // --- 新增的修正程式碼結束 ---
           }
         });
         const link = document.createElement('a');
