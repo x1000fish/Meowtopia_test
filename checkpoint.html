@@ -179,6 +179,10 @@
       font-weight: 900;
       margin-bottom: 10px;
     }
+    #reward-title.shrink-text {
+      font-size: 1.52rem !important; /* 將字體縮小，確保可以塞進一行 */
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -2583,7 +2587,17 @@
         meowAudio.play().catch(() => {});
       } catch (e) {}
 
-      document.getElementById('reward-title').innerText = cp.star;
+      const rewardTitleEl = document.getElementById('reward-title');
+      rewardTitleEl.innerText = cp.star;
+      
+      // 如果是最後一關 (cp4)，就套用縮小字體的 class
+      if (state.checkpointId === 'cp4') {
+        rewardTitleEl.classList.add('shrink-text');
+      } else {
+        rewardTitleEl.classList.remove('shrink-text');
+      }
+      // --- 新增的修改區塊結束 ---
+
       document.getElementById('reward-modal').classList.add('show');
       document.getElementById('complete-btn').style.display = 'none';
       document.getElementById('status-line').innerText = '';
