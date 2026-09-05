@@ -802,17 +802,18 @@
     }
 
     function setStoredProfile(username, meowLv, photo = '', photoX = 50, photoY = 50, photoScale = 1) {
-      const normalizedLevel = Math.min(Math.max(parseInt(meowLv) || 1, 1), 18);
+      const progressLevel = Math.min(Math.max(parseInt(meowLv) || 1, 1), 19);
+      const displayLevel = Math.min(progressLevel, 18);
       sessionStorage.removeItem(GUEST_KEY);
       sessionStorage.setItem('currentUser', username);
-      sessionStorage.setItem('meow_level', String(normalizedLevel));
-      sessionStorage.setItem('currentLevel', String(normalizedLevel));
+      sessionStorage.setItem('meow_level', String(displayLevel));
+      sessionStorage.setItem('currentLevel', String(progressLevel));
       // The database is authoritative on login - sync localStorage's cache to match it
       // too (not just sessionStorage), otherwise a higher value left over from a
       // previous session/account on this browser would keep winning via getStoredLevel().
       localStorage.setItem('currentUser', username);
-      localStorage.setItem('meow_level', String(normalizedLevel));
-      localStorage.setItem('currentLevel', String(normalizedLevel));
+      localStorage.setItem('meow_level', String(displayLevel));
+      localStorage.setItem('currentLevel', String(progressLevel));
       if (photo) {
         sessionStorage.setItem(PHOTO_KEY, photo);
         localStorage.setItem(PHOTO_KEY, photo);
