@@ -1162,7 +1162,7 @@
       if (rawSkin === 'poto') return `./poto/${kind === 'c' ? 'cat' : 'fish'}${index}.png`;
       if (rawSkin === 'mj') return `./mj/${kind === 'c' ? 'Cat' : 'Fish'}${index}.png`;
 
-      const code = index.toString(2).padStart(bits, '0');
+      const code = (index % 8).toString(2).padStart(3, '0');
       return `./svg/${code}-${kind}.svg`;
     }
 
@@ -1236,8 +1236,16 @@
     function renderReplayBoard(event, level) {
       const board = document.getElementById('replay-board');
       const fishAtNode = event?.fishAtNode;
-      
       if (!board) return;
+      const capturedLayout = activeReplay?.replay?.layouts?.[event?.skin]
+        || activeReplay?.replay?.events?.[0]?.visualLayouts?.[event?.skin]
+        || activeReplay?.replay?.replayLayouts?.[event?.skin]
+        || activeReplay?.replay?.layout;
+      if (capturedLayout?.nodes?.length && capturedLayout?.fishes?.length) {
+        renderCapturedReplayBoard(board, capturedLayout, event, level);
+        return;
+      }
+      board.style.cssText = '';
       if (!Array.isArray(fishAtNode) || !fishAtNode.length) {
         board.innerHTML = '<div class="w-full h-full flex items-center justify-center text-gray-500 font-bold">無重播資料</div>';
         return;
@@ -1250,7 +1258,7 @@
         skin = 'default';
       }
 
-      const fishAtNodeLayout = level >= 11;
+      const fishAtNodeLayout = level >= 9;
       const nodeCount = fishAtNode.length;
 
       let bits = 2;
@@ -1263,7 +1271,6 @@
 
       // 放大圖片以符合原始遊戲比例 (佔據圓框的 90%)
       const nodeSizeClass = bits <= 2 ? 'w-24 h-24 sm:w-28 sm:h-28' : (bits === 3 ? 'w-[72px] h-[72px] sm:w-[84px] sm:h-[84px]' : 'w-12 h-12 sm:w-14 sm:h-14');
-      const imgSizeClass = 'w-[90%] h-[90%]'; 
 
       if (currentReplayConfig.nodeCount !== nodeCount || currentReplayConfig.skin !== skin || currentReplayConfig.level !== level) {
         currentReplayConfig = { nodeCount, skin, level };
@@ -1290,19 +1297,23 @@
         const catNodesHtml = Array.from({ length: nodeCount }, (_, nodeIndex) => {
           const pos = positions[nodeIndex];
           const targetSrc = replayImagePath('c', nodeIndex, skin, bits);
+          const isMjLarge = skin === 'mj' && bits === 4 && nodeIndex % 2 === 1;
+          const catImageSize = (bits >= 4 ? 95 : 90) * (isMjLarge ? 82 / 75 : 1);
 
           return `
-            <div id="replay-node-${nodeIndex}" class="replay-node-card absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-[#463438] bg-white ${nodeSizeClass} flex flex-col items-center justify-center transition-all duration-300 shadow-sm" style="left: ${pos.x}%; top: ${pos.y}%;">
-              <img src="${targetSrc}" class="${imgSizeClass} object-contain pointer-events-none">
+            <div id="replay-node-${nodeIndex}" class="replay-node-card absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-[#463438] bg-white ${nodeSizeClass} flex flex-col items-center justify-center transition-all duration-300 shadow-sm" style="left: ${pos.x}%; top: ${pos.y}%;overflow:${isMjLarge ? 'visible' : 'hidden'}">
+              <img src="${targetSrc}" style="width:${catImageSize}%;height:${catImageSize}%" class="object-contain pointer-events-none">
             </div>
           `;
         }).join('');
 
         const fishElementsHtml = Array.from({ length: nodeCount }, (_, fishId) => {
           const fishSrc = replayImagePath('f', fishId, skin, bits);
+          const isMjLarge = skin === 'mj' && fishId % 2 === 1;
+          const fishImageSize = 61 * (isMjLarge ? 0.92 : 1);
           return `
             <div id="replay-fish-${fishId}" class="replay-fish-animated absolute -translate-x-1/2 -translate-y-1/2 ${nodeSizeClass} flex items-center justify-center pointer-events-none z-10 filter drop-shadow-md" style="left: 0%; top: 0%; opacity: 0;">
-              <img src="${fishSrc}" class="${imgSizeClass} object-contain">
+            <img src="${fishSrc}" style="width:${fishImageSize}%;height:${fishImageSize}%" class="object-contain">
             </div>
           `;
         }).join('');
@@ -1332,13 +1343,64 @@
           if (targetNode >= 0 && targetNode < nodeCount) {
             const pos = positions[targetNode];
             fishEl.style.left = `${pos.x}%`;
-            fishEl.style.top = `${pos.y}%`;
+            fishEl.style.top = `${Math.min(98, pos.y + 2.5)}%`;
             fishEl.style.opacity = '1';
           } else {
             fishEl.style.opacity = '0';
           }
         }
       }
+    }
+
+    function renderCapturedReplayBoard(board, layout, event, level) {
+      const fishAtNode = event?.fishAtNode;
+      const positions = new Map();
+      if (Array.isArray(fishAtNode)) {
+        layout.fishes.forEach(fish => {
+          const nodeId = level >= 9 ? fishAtNode.indexOf(Number(fish.id)) : Number(fishAtNode[Number(fish.id)]);
+          const node = layout.nodes[nodeId];
+          if (!node || nodeId < 0) return;
+          const anchor = layout.anchors?.[nodeId] || { x: 0, y: 5 };
+          positions.set(Number(fish.id), { x: node.x + node.w / 2 + anchor.x, y: node.y + node.h / 2 + anchor.y });
+        });
+      }
+      const aspect = (Number(layout.width) || 1) / (Number(layout.height) || 1);
+      const maxHeight = Math.min(520, Math.floor(window.innerHeight * 0.52));
+      const stageWidth = Math.min(850, maxHeight * aspect);
+      board.style.cssText = `position:relative;display:block;flex:none;width:min(100%,${stageWidth}px);aspect-ratio:${Number(layout.width) || 1}/${Number(layout.height) || 1};max-height:${maxHeight}px;margin:4px auto 0;overflow:hidden;border:4px solid #463438;border-radius:22px;background:#fffaf5;box-shadow:0 5px 0 #FFB7C5`;
+      let html = '';
+      const addImages = (images, kind) => (images || []).map(image => {
+        const src = image.src;
+        if (typeof src !== 'string' || !/^\.\/(?:svg|RIP|poto|mj)\/[\w.-]+\.(?:svg|png)$/i.test(src)) return '';
+        const alt = String(image.alt || '').replace(/[&<>"']/g, '');
+        const filter = typeof image.filter === 'string' ? image.filter.replace(/[;<>]/g, '') : 'none';
+        const opacity = Number.isFinite(Number(image.opacity)) ? Math.max(0, Math.min(1, Number(image.opacity))) : 1;
+        const imageScale = kind === 'cat' && layout.nodes.length >= 16 ? 1.2 : 1;
+        const imageWidth = image.w * imageScale;
+        const imageHeight = image.h * imageScale;
+        const imageLeft = image.x - (imageWidth - image.w) / 2;
+        const imageTop = image.y - (imageHeight - image.h) / 2;
+        return `<img src="${src}" alt="${alt}" style="position:absolute;left:${imageLeft * 100}%;top:${imageTop * 100}%;width:${imageWidth * 100}%;height:${imageHeight * 100}%;object-fit:contain;z-index:${Number(image.z) || 1};filter:${filter};opacity:${opacity};pointer-events:none">`;
+      }).join('');
+      layout.nodes.forEach(node => {
+        const matched = Array.isArray(fishAtNode) && (level >= 9 ? fishAtNode[node.id] === node.id : fishAtNode.indexOf(node.id) === node.id);
+        const nodeIsMjLarge = event?.skin === 'mj' && layout.nodes.length >= 16 && (typeof node.large === 'boolean' ? node.large : node.id % 2 === 1);
+        html += `<div style="position:absolute;left:${node.x * 100}%;top:${node.y * 100}%;width:${node.w * 100}%;height:${node.h * 100}%;overflow:${nodeIsMjLarge ? 'visible' : 'hidden'};border:2px solid #463438;border-radius:50%;background:${matched ? '#ebceff' : '#fff'};box-shadow:2px 2px 0 #463438;z-index:2">`;
+        html += addImages(node.images, 'cat');
+        html += `<span style="position:absolute;right:1px;bottom:1px;z-index:25;padding:0 4px;border:1px solid #463438;border-radius:10px;background:#fff9f0;color:#463438;font:900 9px Arial">${Number(node.id) + 1}</span></div>`;
+      });
+      layout.fishes.forEach(fish => {
+        const pos = positions.get(Number(fish.id));
+        if (!pos) return;
+        const scale = 0.68;
+        const width = fish.w * scale;
+        const height = fish.h * scale;
+        const left = pos.x + (fish.center ? 0 : fish.w * (1 - scale) / 2);
+        const top = pos.y + 0.025 + (fish.center ? 0 : fish.h * (1 - scale) / 2);
+        html += `<div style="position:absolute;left:${left * 100}%;top:${top * 100}%;width:${width * 100}%;height:${height * 100}%;transform:${fish.center ? 'translate(-50%,-50%)' : 'none'};z-index:5;pointer-events:none">`;
+        html += addImages(fish.images, 'fish') + '</div>';
+      });
+      board.innerHTML = html || '<p class="p-4 text-center">No visual state</p>';
     }
 
     function replayNext() { 
