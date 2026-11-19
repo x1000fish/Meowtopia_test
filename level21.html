@@ -1150,6 +1150,7 @@
                 isSolved = true; updateUndoStatus(); if (timerInterval) clearInterval(timerInterval);
                 const ft = time, st = steps, u = sessionStorage.getItem('currentUser'), savedLevel = parseInt(sessionStorage.getItem('currentLevel')) || 1;
                 if (savedLevel < 22) sessionStorage.setItem('currentLevel', 22);
+                localStorage.setItem('currentLevel', Math.max(parseInt(localStorage.getItem('currentLevel') || '1', 10) || 1, 22));
                 setTimeout(() => { if(typeof meow !== 'undefined') { meow.currentTime = 0; meow.play(); } document.getElementById('victoryMsg').innerText = `STEP：${st} | TIME：${ft}s`; document.getElementById('victoryModal').style.display = 'flex'; const wrapper = document.getElementById('leaderboard-wrapper');
             if (wrapper) {
                 setSidePanel('rank'); 
@@ -1166,7 +1167,7 @@
             }
             // ========================================================
         }, 800);
-                if (u && sessionStorage.getItem('isGuest') !== 'true') { fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'saveRecord', username: u, level: 12, steps: st, time: ft, circuit: gateHistory.join(',') }) }).then(() => { setTimeout(async () => {
+                if (u && sessionStorage.getItem('isGuest') !== 'true') { fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'saveRecord', username: u, level: 21, steps: st, time: ft, circuit: gateHistory.join(',') }) }).then(() => { setTimeout(async () => {
                     await fetchLeaderboard();
                     showRankChampion(activeRankType);
                 }, 1200); 
@@ -1183,7 +1184,7 @@
 		window.location.href = `lab3.html?circuit=${encodeURIComponent(gateHistory.join(','))}&input=${initialInput}`; 
 	}
         function toggleLeaderboard() { document.getElementById('leaderboard-wrapper').classList.toggle('expanded'); }
-        async function fetchLeaderboard() { const listArea = document.getElementById('rankList'); try { const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard&level=12`); const data = await response.json(); if (data && Array.isArray(data) && data.length > 0) { leaderboardData = data; renderRank('steps'); } else { listArea.innerHTML = '<p class="text-center italic text-gray-400 mt-10 text-sm">No records yet</p>'; } } catch (e) { listArea.innerHTML = '<p class="text-center italic text-red-400 mt-10 text-sm">Load Error</p>'; } }
+        async function fetchLeaderboard() { const listArea = document.getElementById('rankList'); try { const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard&level=21`); const data = await response.json(); if (data && Array.isArray(data) && data.length > 0) { leaderboardData = data; renderRank('steps'); } else { listArea.innerHTML = '<p class="text-center italic text-gray-400 mt-10 text-sm">No records yet</p>'; } } catch (e) { listArea.innerHTML = '<p class="text-center italic text-red-400 mt-10 text-sm">Load Error</p>'; } }
         function renderRank(type) { const tabSteps = document.getElementById('tab-steps'), tabTime = document.getElementById('tab-time'), listArea = document.getElementById('rankList'); if (type === 'steps') { tabSteps.className = 'rank-tab active'; tabTime.className = 'rank-tab bg-gray-100'; } else { tabSteps.className = 'rank-tab bg-gray-100'; tabTime.className = 'rank-tab active'; } if (!leaderboardData || leaderboardData.length === 0) return; const sorted = [...leaderboardData].sort((a, b) => a[type] - b[type]); let html = ""; sorted.slice(0, 10).forEach((item, index) => { const medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : (index + 1) + "."; const av=item.photo?`<img src="${item.photo}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:${item.photoX||50}% ${item.photoY||50}%;transform-origin:${item.photoX||50}% ${item.photoY||50}%;transform:scale(${item.photoScale||1});">`:'🐱'; html += `<div class="rank-item"><div class="rank-avatar-sm">${av}</div><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;">${medal} ${item.username || item.name || 'Anonymous'}</span><span class="rank-value">${type === 'steps' ? item.steps + '🐾' : item.time + 's'}</span></div>`; }); listArea.innerHTML = html; }
         function initGameLayout() { 
             const nL = document.getElementById('nodes-layer');
@@ -1320,7 +1321,7 @@
         async function fetchLeaderboard() {
             const listArea = document.getElementById('rankList');
             try {
-                const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard&level=12`);
+                const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard&level=21`);
                 const data = await response.json();
                 leaderboardData = Array.isArray(data) ? data : [];
                 if (leaderboardData.length > 0) renderRank(activeRankType, !(document.getElementById('leaderboard-wrapper')?.classList.contains('expanded')));

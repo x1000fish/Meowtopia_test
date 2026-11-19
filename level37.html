@@ -1406,6 +1406,7 @@
                 isSolved = true; updateUndoStatus(); if (timerInterval) clearInterval(timerInterval);
                 const ft = time, st = steps, u = sessionStorage.getItem('currentUser'), savedLevel = parseInt(sessionStorage.getItem('currentLevel')) || 1;
                 if (savedLevel < 38) sessionStorage.setItem('currentLevel', 38);
+                localStorage.setItem('currentLevel', Math.max(parseInt(localStorage.getItem('currentLevel') || '1', 10) || 1, 38));
                 setTimeout(() => {
                     if(typeof meow !== 'undefined') { meow.currentTime = 0; meow.play(); }
                     document.getElementById('victoryMsg').innerText = `STEP：${st} | TIME：${ft}s`;
@@ -1435,7 +1436,7 @@
                         body: JSON.stringify({
                             action: 'saveRecord',
                             username: u,
-                            level: 11,
+                            level: 37,
                             steps: st,
                             time: ft,
                             circuit: gateHistory.join(',')
@@ -1461,7 +1462,7 @@
         async function fetchLeaderboard() { 
             const listArea = document.getElementById('rankList'); 
             try { 
-                const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard&level=11`); 
+                const response = await fetch(`${SCRIPT_URL}?action=getLeaderboard&level=37`); 
                 const data = await response.json(); 
                 if (data && Array.isArray(data) && data.length > 0) { 
                     leaderboardData = data; 
