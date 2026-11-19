@@ -1459,7 +1459,7 @@
           </div>
         </div>
         <div class="certificate-actions">
-          <button onclick="location.href='index.html'" class="game-btn btn-blue">HOME</button>
+          <button onclick="location.href='index.html?map=2'" class="game-btn btn-blue">NEXT MAP</button>
           <button id="certificate-download-btn" onclick="downloadCertificate()" class="game-btn btn-red">DOWNLOAD</button>
         </div>
       </div>
@@ -2573,7 +2573,7 @@
       const curLvl = Math.max(parseInt(sessionStorage.getItem('currentLevel') || '1'), parseInt(sessionStorage.getItem('meow_level') || '1'));
       const upLvl = Math.max(curLvl, nextLevel);
       sessionStorage.setItem('currentLevel', String(upLvl));
-      sessionStorage.setItem('meow_level', String(Math.min(upLvl, 18)));
+      sessionStorage.setItem('meow_level', String(Math.min(upLvl, 36)));
       updateStarMeter();
 
       if (alreadyCollected) {
@@ -2867,6 +2867,8 @@
         const cp4Score = parseInt(localStorage.getItem(`meow_cp4_score_${user}`) || sessionStorage.getItem('meow_cp4_score') || '0', 10);
         const passedFinalChallenge = cp4Score >= 90;
         if (passedFinalChallenge && STAR_KEYS.every(key => readStars()[key])) {
+          localStorage.setItem(`meow_certificate_earned_${user}`, 'true');
+          sessionStorage.setItem(`meow_certificate_earned_${user}`, 'true');
           document.getElementById('checkpoint-content').style.display = 'none';
           document.getElementById('certificate-content').classList.add('show');
           document.getElementById('checkpoint-label').innerText = 'Certificate';

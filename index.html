@@ -316,6 +316,12 @@
       justify-items: center;
       align-items: center;
     }
+    .map-switcher { display: flex; justify-content: center; gap: 12px; margin: 4px 0 2px; }
+    .map-tab { min-width: 150px; border: 4px solid var(--dark); border-radius: 18px; padding: 9px 18px; background: white; color: var(--dark); font-weight: 900; cursor: pointer; box-shadow: 0 4px 0 var(--dark); transition: transform 0.15s, background 0.15s; }
+    .map-tab:hover:not(.locked) { transform: translateY(-2px); }
+    .map-tab.active { background: var(--green); color: white; text-shadow: 1px 1px 0 var(--dark); }
+    .map-tab.locked { background: #eee; color: #999; border-color: #aaa; box-shadow: 0 4px 0 #aaa; }
+    .map-title { margin: 12px 0 0; font-size: 22px; font-weight: 900; color: var(--dark); text-align: center; }
     .level-node {
       width: 100px;
       height: 100px;
@@ -573,6 +579,11 @@
           </div>
         </div>
       </div>
+      <div class="map-switcher" aria-label="Choose map">
+        <button id="map1-tab" class="map-tab active" onclick="selectMap(1)">MAP 1</button>
+        <button id="map2-tab" class="map-tab locked" onclick="selectMap(2)">MAP 2 🔒</button>
+      </div>
+      <div id="map-title" class="map-title">MAP 1 · QUANTUM BASICS</div>
       <div class="map-container" id="level-grid"></div>
       <div class="flex justify-center gap-4 mt-4">
         <button onclick="openReplayLibrary()" class="game-btn btn-green px-8" style="font-size:18px">MY REPLAYS</button>
@@ -661,6 +672,8 @@
     const GUEST_KEY = 'isGuest';
     const STAR_KEYS = ['cp1', 'cp2', 'cp3', 'cp4'];
     const METER_STAR_KEYS = ['cp1', 'cp2', 'cp3'];
+    let activeMap = 1;
+    let mapQueryApplied = false;
 
     function starIconSVG(earned) {
       const fill = earned ? '#FFC400' : '#FFE9AE';
@@ -744,6 +757,13 @@
         return { cp1: false, cp2: false, cp3: false, cp4: false };
       }
     }
+    function hasEarnedCertificate(username = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || 'Guest') {
+      return localStorage.getItem(`meow_certificate_earned_${username}`) === 'true'
+        || sessionStorage.getItem(`meow_certificate_earned_${username}`) === 'true';
+    }
+    function hasPassedFinalChallenge(username = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || 'Guest') {
+      return parseInt(localStorage.getItem(`meow_cp4_score_${username}`) || sessionStorage.getItem('meow_cp4_score') || '0', 10) >= 90;
+    }
     function renderQuantumStars() {
       const stars = readCheckpointStars();
       const target = document.getElementById('quantum-stars');
@@ -757,8 +777,8 @@
       target.innerHTML = photo ? `<img src="${photo}" alt="Player photo" style="object-position:${photoX}% ${photoY}%;transform-origin:${photoX}% ${photoY}%;transform:scale(${photoScale});">` : '🐱';
     }
     function setStoredProfile(username, meowLv, photo = '', photoX = 50, photoY = 50, photoScale = 1) {
-      const progressLevel = Math.min(Math.max(parseInt(meowLv) || 1, 1), 19);
-      const displayLevel = Math.min(progressLevel, 18);
+      const progressLevel = Math.min(Math.max(parseInt(meowLv) || 1, 1), 37);
+      const displayLevel = Math.min(progressLevel, 36);
       sessionStorage.removeItem(GUEST_KEY);
       sessionStorage.setItem('currentUser', username);
       sessionStorage.setItem('meow_level', String(displayLevel));
@@ -905,22 +925,47 @@
       setGuestProfile();
       showMeowMap('Guest');
     }
+    function selectMap(mapNumber) {
+      const meowLv = Math.min(Math.max(getStoredLevel() || 1, 1), 37);
+      const stars = readCheckpointStars();
+      const map2Unlocked = meowLv >= 19 && STAR_KEYS.every(id => stars[id]) && hasEarnedCertificate();
+      if (mapNumber === 2 && !map2Unlocked) {
+        alert('Complete Level 18, all four Checkpoints, and earn the certificate to unlock Map 2.');
+        return;
+      }
+      activeMap = mapNumber === 2 ? 2 : 1;
+      showMeowMap();
+    }
     function showMeowMap(user) {
       const storedUser = user || sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || 'Guest';
-      const meowLv = Math.min(Math.max(getStoredLevel() || 1, 1), 19);
-      const displayLevel = Math.min(meowLv, 18);
+      const meowLv = Math.min(Math.max(getStoredLevel() || 1, 1), 37);
+      const displayLevel = Math.min(meowLv, 36);
       const stars = readCheckpointStars();
       const isGuest = sessionStorage.getItem(GUEST_KEY) === 'true';
+      const certificateRequirementsMet = meowLv >= 19 && STAR_KEYS.every(id => stars[id]) && hasPassedFinalChallenge();
+      const map2Unlocked = certificateRequirementsMet && hasEarnedCertificate();
+      if (!mapQueryApplied) {
+        if (new URLSearchParams(location.search).get('map') === '2' && map2Unlocked) activeMap = 2;
+        mapQueryApplied = true;
+      }
+      if (!map2Unlocked) activeMap = 1;
       document.getElementById('auth-card').classList.add('hidden');
       document.getElementById('meow-map').classList.remove('hidden');
       document.getElementById('meow-display-username').innerText = storedUser;
       document.getElementById('meow-display-level').innerText = `LV. ${displayLevel}`;
       document.getElementById('edit-profile-btn').style.display = sessionStorage.getItem(GUEST_KEY) === 'true' ? 'none' : '';
+      const map1Tab = document.getElementById('map1-tab');
+      const map2Tab = document.getElementById('map2-tab');
+      map1Tab.classList.toggle('active', activeMap === 1);
+      map2Tab.classList.toggle('active', activeMap === 2);
+      map2Tab.classList.toggle('locked', !map2Unlocked);
+      map2Tab.innerText = map2Unlocked ? 'MAP 2' : 'MAP 2 🔒';
+      document.getElementById('map-title').innerText = activeMap === 1 ? 'MAP 1 · QUANTUM BASICS' : 'MAP 2 · PUZZLE EXPANSION';
       renderAvatar('meow-player-avatar');
       renderQuantumStars();
       const grid = document.getElementById('level-grid');
       grid.innerHTML = '';
-      const mapNodes = [
+      const mapOneNodes = [
         { type: 'level', level: 1 },
         { type: 'checkpoint', id: 'cp1', label: 'Checkpoint 1', unlockLevel: 2 },
         { type: 'level', level: 2 },
@@ -945,12 +990,18 @@
         { type: 'checkpoint', id: 'cp4', label: 'Checkpoint 4', unlockLevel: 19 },
         { type: 'certificate', label: 'Certificate' }
       ];
+      const mapNodes = activeMap === 1
+        ? mapOneNodes
+        : Array.from({ length: 18 }, (_, index) => ({ type: 'level', level: index + 19 }));
       mapNodes.forEach(item => {
         const node = document.createElement('a');
         node.className = 'level-node';
         if (item.type === 'level') {
           node.innerText = item.level;
-          if (isGuest || item.level === 1 || item.level <= displayLevel) {
+          const isLevelUnlocked = activeMap === 2
+            ? item.level <= displayLevel
+            : (isGuest || item.level === 1 || item.level <= displayLevel);
+          if (isLevelUnlocked) {
             node.href = `level${item.level}.html`;
           } else {
             node.classList.add('locked');
@@ -977,7 +1028,7 @@
             };
           }
         } else {
-          const unlocked = isGuest || STAR_KEYS.every(id => stars[id]);
+          const unlocked = certificateRequirementsMet;
           node.classList.add('certificate-node');
           node.innerText = 'Certificate';
           if (unlocked) {
@@ -986,7 +1037,7 @@
             node.classList.add('locked');
             node.onclick = event => {
               event.preventDefault();
-              alert('Collect all 3 Quantum Stars and complete the Final Challenge to unlock the certificate.');
+              alert('Complete Level 18 and all four Checkpoints, then pass the Final Challenge to earn the certificate.');
             };
           }
         }
