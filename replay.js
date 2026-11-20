@@ -122,7 +122,7 @@
     if (!token || sessionStorage.getItem('isGuest') === 'true') return;
     const stepCount = Number(readGlobal('steps', readGlobal('currentSteps', events.length))) || events.length;
     const elapsed = Number(document.getElementById('timer')?.innerText) || Number(readGlobal('time', 0)) || 0;
-    const endpoint = 'https://script.google.com/macros/s/AKfycbzAwPg4Bf5V2sZ-E-wmstI3FBHwlynIlMLStQwlbs9cbJY2Zof_PTZZHRa43ob26SbiPw/exec';
+    const endpoint = 'https://script.google.com/macros/s/AKfycbxl2CNnv9zDBvU9jX78cTUDWDX1DIYxhVW3-VD_I16a9yBtLmlnEy8nhdMGLepV0Jk4mg/exec';
     try {
       await fetch(endpoint, {
         method: 'POST', mode: 'no-cors',
