@@ -236,6 +236,7 @@
         .skin-mj.hide-labels .fish-wrapper.large-node > img.fish-img, .skin-mj.hide-labels .fish-wrapper.large-node > img.fish-bg-shape { transform: translate(10px, -45%) scale(1) !important; }
         .skin-mj .fish-label { width: auto; padding: 2px 5px; height: 22px; border-radius: 10px; gap: 1px; font-size: 10px; top: 25px; right: 20px; }
 </style>
+    <script src="score-upload.js"></script>
 </head>
 <body id="body-root" class="mini-mode hide-labels">
     <script>(function(){const map='2';const user=(sessionStorage.getItem('currentUser')||localStorage.getItem('currentUser')||'Guest').trim().toLowerCase();localStorage.setItem('meowtopiaHomeMap_'+user,map);localStorage.setItem('meowtopiaHomeMap',map);sessionStorage.setItem('meowtopiaHomeMap_'+user,map);})();</script>
@@ -1149,7 +1150,7 @@
         async function checkWin() {
             if (fishAtNode.every((pos, i) => pos === i)) {
                 isSolved = true; updateUndoStatus(); if (timerInterval) clearInterval(timerInterval);
-                const ft = time, st = steps, u = sessionStorage.getItem('currentUser'), savedLevel = parseInt(sessionStorage.getItem('currentLevel')) || 1;
+                const ft = time, st = steps, u = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser'), savedLevel = parseInt(sessionStorage.getItem('currentLevel')) || 1;
                 if (savedLevel < 21) sessionStorage.setItem('currentLevel', 21);
                 localStorage.setItem('currentLevel', Math.max(parseInt(localStorage.getItem('currentLevel') || '1', 10) || 1, 21));
                 setTimeout(() => { if(typeof meow !== 'undefined') { meow.currentTime = 0; meow.play(); } document.getElementById('victoryMsg').innerText = `STEP：${st} | TIME：${ft}s`; document.getElementById('victoryModal').style.display = 'flex'; const wrapper = document.getElementById('leaderboard-wrapper');
@@ -1168,7 +1169,7 @@
             }
             // ========================================================
         }, 800);
-                if (u && sessionStorage.getItem('isGuest') !== 'true') { fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'saveRecord', username: u, level: 20, steps: st, time: ft, circuit: gateHistory.join(',') }) }).then(() => { setTimeout(async () => {
+                if (u && sessionStorage.getItem('isGuest') !== 'true') { uploadScoreToSheet(SCRIPT_URL, { action: 'saveRecord', username: u, level: 20, steps: st, time: ft, circuit: gateHistory.join(',') }).then(() => { setTimeout(async () => {
                     await fetchLeaderboard();
                     showRankChampion(activeRankType);
                 }, 1200); 

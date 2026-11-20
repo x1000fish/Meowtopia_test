@@ -754,12 +754,14 @@
     }
     function readCheckpointStars() {
       try {
+        const username = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || 'Guest';
+        const stored = localStorage.getItem(getCheckpointStarsKey(username)) || (username === 'Guest' ? sessionStorage.getItem('checkpointStars') : null) || '{}';
         return {
           cp1: false,
           cp2: false,
           cp3: false,
           cp4: false,
-          ...JSON.parse(localStorage.getItem(getCheckpointStarsKey()) || sessionStorage.getItem('checkpointStars') || '{}')
+          ...JSON.parse(stored)
         };
       } catch {
         return { cp1: false, cp2: false, cp3: false, cp4: false };
@@ -767,10 +769,10 @@
     }
     function hasEarnedCertificate(username = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || 'Guest') {
       return localStorage.getItem(`meow_certificate_earned_${username}`) === 'true'
-        || sessionStorage.getItem(`meow_certificate_earned_${username}`) === 'true';
+        || (username === 'Guest' && sessionStorage.getItem(`meow_certificate_earned_${username}`) === 'true');
     }
     function hasPassedFinalChallenge(username = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || 'Guest') {
-      return parseInt(localStorage.getItem(`meow_cp4_score_${username}`) || sessionStorage.getItem('meow_cp4_score') || '0', 10) >= 90;
+      return parseInt(localStorage.getItem(`meow_cp4_score_${username}`) || (username === 'Guest' ? sessionStorage.getItem('meow_cp4_score') : '0') || '0', 10) >= 90;
     }
     function renderQuantumStars() {
       const stars = readCheckpointStars();
@@ -807,6 +809,28 @@
       localStorage.setItem(PHOTO_X_KEY, photoX);
       localStorage.setItem(PHOTO_Y_KEY, photoY);
       localStorage.setItem(PHOTO_SCALE_KEY, photoScale);
+    }
+    async function syncAccountCheckpointProgress(data) {
+      const username = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || 'Guest';
+      const key = getCheckpointStarsKey(username);
+      let localStars = {};
+      try { localStars = JSON.parse(localStorage.getItem(key) || '{}'); } catch {}
+      const remoteStars = data.checkpointStars || {};
+      const stars = Object.fromEntries(STAR_KEYS.map(id => [id, localStars[id] === true || remoteStars[id] === true]));
+      const score = Math.max(Number(localStorage.getItem(`meow_cp4_score_${username}`) || 0), Number(data.cp4Score || 0));
+      const certificate = localStorage.getItem(`meow_certificate_earned_${username}`) === 'true' || data.certificateEarned === true;
+      localStorage.setItem(key, JSON.stringify(stars));
+      sessionStorage.setItem('checkpointStars', JSON.stringify(stars));
+      localStorage.setItem(`meow_cp4_score_${username}`, String(score));
+      sessionStorage.setItem('meow_cp4_score', String(score));
+      if (certificate) {
+        localStorage.setItem(`meow_certificate_earned_${username}`, 'true');
+        sessionStorage.setItem(`meow_certificate_earned_${username}`, 'true');
+      }
+      const token = data.authToken || sessionStorage.getItem('meowAuthToken') || localStorage.getItem('meowAuthToken');
+      if (token) {
+        fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'saveCheckpointProgress', token, checkpointStars: stars, cp4Score: score, certificateEarned: certificate }) }).catch(() => {});
+      }
     }
     function setGuestProfile() {
       sessionStorage.clear();
@@ -880,6 +904,7 @@
           const meowLevel = parseInt(data.meowtopiaLevel ?? data.level ?? 1) || 1;
           setStoredProfile(username, meowLevel, data.photo || '', data.photoX || 50, data.photoY || 50, data.photoScale || 1);
           if (data.authToken) { sessionStorage.setItem('meowAuthToken', data.authToken); localStorage.setItem('meowAuthToken', data.authToken); }
+          await syncAccountCheckpointProgress(data);
           showMeowMap(username);
         } else if (data.status === 'wrong_password') {
           alert('Wrong password!');

@@ -468,6 +468,7 @@
  	   transform: translateX(0px) translateY(2px) !important; /* 微調位置 */
 	}
 </style>
+    <script src="score-upload.js"></script>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 mini-mode hide-labels" id="body-root">
     <script>(function(){const map='1';const user=(sessionStorage.getItem('currentUser')||localStorage.getItem('currentUser')||'Guest').trim().toLowerCase();localStorage.setItem('meowtopiaHomeMap_'+user,map);localStorage.setItem('meowtopiaHomeMap',map);sessionStorage.setItem('meowtopiaHomeMap_'+user,map);})();</script>
@@ -1849,7 +1850,7 @@
                 if (timerInterval) clearInterval(timerInterval);
                 const ft = time;
                 const st = steps;
-                const u = sessionStorage.getItem('currentUser');
+                const u = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
                 const savedLevel = parseInt(sessionStorage.getItem('currentLevel')) || 1;
                 if (savedLevel < 3) { 
                     sessionStorage.setItem('currentLevel', 3);
@@ -1875,18 +1876,14 @@
             }
             }, 800);
                 if (u && sessionStorage.getItem('isGuest') !== 'true') {
-                    fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        body: JSON.stringify({
+                    uploadScoreToSheet(SCRIPT_URL, {
                             action: 'saveRecord',
                             username: u,
                             level: 2,          
                             steps: st,
                             time: ft,
                             circuit: gateHistory.join(',')
-                        })
-                    }).then(() => {
+                        }).then(() => {
                         setTimeout(async () => {
                     await fetchLeaderboard();
                     showRankChampion(activeRankType);

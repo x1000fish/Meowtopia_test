@@ -1468,7 +1468,7 @@
   </main>
 
   <script>
-    const CHECKPOINT_SCRIPT_URL = '';
+    const CHECKPOINT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAwPg4Bf5V2sZ-E-wmstI3FBHwlynIlMLStQwlbs9cbJY2Zof_PTZZHRa43ob26SbiPw/exec';
     const SKIN_STORAGE_KEY = 'meowtopiaSkin';
     const STAR_KEYS = ['cp1', 'cp2', 'cp3', 'cp4'];
     const METER_STAR_KEYS = ['cp1', 'cp2', 'cp3'];
@@ -1528,13 +1528,48 @@
     function getStarsKey() { return `meow_checkpoint_stars_${getUser()}`; }
     function defaultStars() { return { cp1: false, cp2: false, cp3: false, cp4: false }; }
     function readStars() {
-      try { return { ...defaultStars(), ...JSON.parse(localStorage.getItem(getStarsKey()) || sessionStorage.getItem('checkpointStars') || '{}') }; }
+      try { return { ...defaultStars(), ...JSON.parse(localStorage.getItem(getStarsKey()) || (getUser() === 'Guest' ? sessionStorage.getItem('checkpointStars') : null) || '{}') }; }
       catch { return defaultStars(); }
     }
     function writeStars(stars) {
       const normalized = { ...defaultStars(), ...stars };
       localStorage.setItem(getStarsKey(), JSON.stringify(normalized));
       sessionStorage.setItem('checkpointStars', JSON.stringify(normalized));
+      saveCheckpointProgress();
+    }
+    function saveCheckpointProgress(extra = {}) {
+      const token = sessionStorage.getItem('meowAuthToken') || localStorage.getItem('meowAuthToken');
+      if (!token || getUser() === 'Guest') return;
+      const user = getUser();
+      const score = parseInt(localStorage.getItem(`meow_cp4_score_${user}`) || (user === 'Guest' ? sessionStorage.getItem('meow_cp4_score') : '0') || '0', 10) || 0;
+      fetch(CHECKPOINT_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'saveCheckpointProgress', token, checkpointStars: readStars(), cp4Score: score, certificateEarned: localStorage.getItem(`meow_certificate_earned_${user}`) === 'true' || extra.certificateEarned === true })
+      }).catch(() => {});
+    }
+    async function loadCheckpointProgress() {
+      const token = sessionStorage.getItem('meowAuthToken') || localStorage.getItem('meowAuthToken');
+      if (!token || getUser() === 'Guest') return;
+      try {
+        const response = await fetch(`${CHECKPOINT_SCRIPT_URL}?action=getProgress&token=${encodeURIComponent(token)}`);
+        const data = await response.json();
+        if (data.status !== 'success') return;
+        const user = getUser();
+        const localStars = readStars();
+        const mergedStars = Object.fromEntries(STAR_KEYS.map(key => [key, localStars[key] === true || data.checkpointStars?.[key] === true]));
+        localStorage.setItem(getStarsKey(), JSON.stringify(mergedStars));
+        sessionStorage.setItem('checkpointStars', JSON.stringify(mergedStars));
+        const score = Math.max(parseInt(localStorage.getItem(`meow_cp4_score_${user}`) || '0', 10) || 0, Number(data.cp4Score) || 0);
+        localStorage.setItem(`meow_cp4_score_${user}`, String(score));
+        sessionStorage.setItem('meow_cp4_score', String(score));
+        const earned = data.certificateEarned === true || localStorage.getItem(`meow_certificate_earned_${user}`) === 'true';
+        if (earned) {
+          localStorage.setItem(`meow_certificate_earned_${user}`, 'true');
+          sessionStorage.setItem(`meow_certificate_earned_${user}`, 'true');
+          saveCheckpointProgress({ certificateEarned: true });
+        }
+        if (STAR_KEYS.some(key => localStars[key] !== mergedStars[key]) || score !== Number(data.cp4Score) || earned !== data.certificateEarned) saveCheckpointProgress({ certificateEarned: earned });
+      } catch (error) {}
     }
     function updateStarMeter() {
       const stars = readStars();
@@ -2516,8 +2551,10 @@
       }).join('');
       const score = correct * 10;
       const user = getUser();
-      localStorage.setItem(`meow_cp4_score_${user}`, String(score));
-      sessionStorage.setItem('meow_cp4_score', String(score));
+      const bestScore = Math.max(score, parseInt(localStorage.getItem(`meow_cp4_score_${user}`) || '0', 10) || 0);
+      localStorage.setItem(`meow_cp4_score_${user}`, String(bestScore));
+      sessionStorage.setItem('meow_cp4_score', String(bestScore));
+      saveCheckpointProgress();
       const passed = score >= 90;
       panel.innerHTML = `
         <div class="cp4-score-banner ${passed ? 'pass' : 'fail'}">Part 1 Score: ${score} / 100${passed ? ' 🎉 You\'ve unlocked the certificate!' : ' (Score 90+ to unlock the certificate)'}</div>
@@ -2723,7 +2760,7 @@
 
       const scoreEl = document.getElementById('certificate-score');
       if (scoreEl) {
-        const score = localStorage.getItem(`meow_cp4_score_${user}`) || sessionStorage.getItem('meow_cp4_score');
+        const score = localStorage.getItem(`meow_cp4_score_${user}`) || (user === 'Guest' ? sessionStorage.getItem('meow_cp4_score') : null);
         if (score) {
           scoreEl.style.display = 'flex';
           scoreEl.innerText = `Final Challenge Score: ${score} / 100`;
@@ -2865,7 +2902,7 @@
 
       if (params.get('certificate') === '1') {
         const user = getUser();
-        const cp4Score = parseInt(localStorage.getItem(`meow_cp4_score_${user}`) || sessionStorage.getItem('meow_cp4_score') || '0', 10);
+        const cp4Score = parseInt(localStorage.getItem(`meow_cp4_score_${user}`) || (user === 'Guest' ? sessionStorage.getItem('meow_cp4_score') : '0') || '0', 10);
         const passedFinalChallenge = cp4Score >= 90;
         if (passedFinalChallenge && STAR_KEYS.every(key => readStars()[key])) {
           localStorage.setItem(`meow_certificate_earned_${user}`, 'true');
@@ -2898,7 +2935,7 @@
       });
     }
 
-    init();
+    loadCheckpointProgress().finally(() => { updateStarMeter(); init(); });
   </script>
 </body>
 </html>
