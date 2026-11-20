@@ -470,6 +470,7 @@
 </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 mini-mode hide-labels" id="body-root">
+    <script>(function(){const map='1';const user=(sessionStorage.getItem('currentUser')||localStorage.getItem('currentUser')||'Guest').trim().toLowerCase();localStorage.setItem('meowtopiaHomeMap_'+user,map);localStorage.setItem('meowtopiaHomeMap',map);sessionStorage.setItem('meowtopiaHomeMap_'+user,map);})();</script>
     <div id="initial-mask"></div>
     <div id="mode-toggle-container" style="position: relative; z-index: 501;">
         <div id="mode-toggle" class="mode-toggle-fixed yellow-glow" onclick="togglePro()">👁️</div>
@@ -1036,7 +1037,7 @@
             updateCircuitLabels();
             updateFeatureToggleLabels();
         }
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxsOdnjfzdpZPaLEojtMJFNjs8t2EJaoPYib4kVj6GrCXKMwt9Fj6iV6swJbicaM28QOw/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAwPg4Bf5V2sZ-E-wmstI3FBHwlynIlMLStQwlbs9cbJY2Zof_PTZZHRa43ob26SbiPw/exec';
         let steps = 0, time = 0, isPro = false, fishAtNode = [0, 1, 3, 2], gateHistory = [], timerInterval, isSolved = false, isTimerRunning = false;
         const PROGRESS_TOTAL = 4;
         const PROGRESS_DEFAULT_CODE = '011';
@@ -1852,6 +1853,7 @@
                 const savedLevel = parseInt(sessionStorage.getItem('currentLevel')) || 1;
                 if (savedLevel < 3) { 
                     sessionStorage.setItem('currentLevel', 3);
+                localStorage.setItem('currentLevel', Math.max(parseInt(localStorage.getItem('currentLevel') || '1', 10) || 1, 3));
                 }
                 setTimeout(() => {
                     if(typeof meow !== 'undefined') { meow.currentTime = 0; meow.play(); }
@@ -2124,5 +2126,6 @@
             };
         })();
 </script>
+<script src="replay.js"></script>
 </body>
 </html>

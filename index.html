@@ -664,7 +664,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2E-nE5xSJhF2HFsHLS4_w9_QxJ8dqEnFlMqcS294tNHxIITfhr8uInRylcLk9rxSl6A/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAwPg4Bf5V2sZ-E-wmstI3FBHwlynIlMLStQwlbs9cbJY2Zof_PTZZHRa43ob26SbiPw/exec';
     const PHOTO_KEY = 'playerPhoto';
     const PHOTO_X_KEY = 'playerPhotoX';
     const PHOTO_Y_KEY = 'playerPhotoY';
@@ -674,6 +674,14 @@
     const METER_STAR_KEYS = ['cp1', 'cp2', 'cp3'];
     let activeMap = 1;
     let mapQueryApplied = false;
+    function homeMapKey(username = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || 'Guest') {
+      return `meowtopiaHomeMap_${String(username).trim().toLowerCase()}`;
+    }
+    function rememberHomeMap(mapNumber, username = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser') || 'Guest') {
+      const map = mapNumber === 2 ? '2' : '1';
+      localStorage.setItem(homeMapKey(username), map);
+      localStorage.setItem('meowtopiaHomeMap', map);
+    }
 
     function starIconSVG(earned) {
       const fill = earned ? '#FFC400' : '#FFE9AE';
@@ -934,6 +942,7 @@
         return;
       }
       activeMap = mapNumber === 2 ? 2 : 1;
+      rememberHomeMap(activeMap);
       showMeowMap();
     }
     function showMeowMap(user) {
@@ -945,10 +954,17 @@
       const certificateRequirementsMet = meowLv >= 19 && STAR_KEYS.every(id => stars[id]) && hasPassedFinalChallenge();
       const map2Unlocked = certificateRequirementsMet && hasEarnedCertificate();
       if (!mapQueryApplied) {
-        if (new URLSearchParams(location.search).get('map') === '2' && map2Unlocked) activeMap = 2;
+        const requestedMap = new URLSearchParams(location.search).get('map');
+        const rememberedMap = localStorage.getItem(homeMapKey(storedUser))
+          || sessionStorage.getItem(homeMapKey(storedUser))
+          || localStorage.getItem('meowtopiaHomeMap')
+          || '1';
+        if (requestedMap === '1' || requestedMap === '2') activeMap = requestedMap === '2' ? 2 : 1;
+        else activeMap = rememberedMap === '2' ? 2 : 1;
         mapQueryApplied = true;
       }
       if (!map2Unlocked) activeMap = 1;
+      rememberHomeMap(activeMap, storedUser);
       document.getElementById('auth-card').classList.add('hidden');
       document.getElementById('meow-map').classList.remove('hidden');
       document.getElementById('meow-display-username').innerText = storedUser;

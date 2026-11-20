@@ -238,6 +238,7 @@
 </style>
 </head>
 <body id="body-root" class="mini-mode hide-labels">
+    <script>(function(){const map='2';const user=(sessionStorage.getItem('currentUser')||localStorage.getItem('currentUser')||'Guest').trim().toLowerCase();localStorage.setItem('meowtopiaHomeMap_'+user,map);localStorage.setItem('meowtopiaHomeMap',map);sessionStorage.setItem('meowtopiaHomeMap_'+user,map);})();</script>
 <script>
 (() => {
   const requiredLevel = 20;
@@ -409,7 +410,7 @@
             updateCircuitLabels();
             updateFeatureToggleLabels();
         }
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2E-nE5xSJhF2HFsHLS4_w9_QxJ8dqEnFlMqcS294tNHxIITfhr8uInRylcLk9rxSl6A/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAwPg4Bf5V2sZ-E-wmstI3FBHwlynIlMLStQwlbs9cbJY2Zof_PTZZHRa43ob26SbiPw/exec';
         let steps = 0, time = 0, isPro = false, isQuantumMode = false, timerInterval, gateHistory = [], isSolved = false;
         let selectedIndices = [];
         let actionStack = [];
